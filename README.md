@@ -7,10 +7,12 @@ A modern, responsive Task Planner web application built using **HTML**, **CSS**,
 🔗 **Live Website:**  
 https://pragatibhandare05-ux.github.io/Task-Planner/
 
+**💻 GitHub Repository**
+https://github.com/pragatibhandare05-ux/Task-Planner
+
 ## 📸 Preview
 
 > Add screenshots of your application here.
-
 Example:
 📂 screenshots/
     ├── home-page.png
@@ -31,6 +33,7 @@ Then display them like this:
 - ✔ Mark tasks as completed
 - 🔍 Search tasks instantly
 - 🚩 Priority levels (High, Medium, Low)
+- 📂 Task Categories (Study, Work, Personal, Shopping, Fitness)
 - 📅 Due date selection
 - 📊 Progress bar
 - 📈 Task statistics
@@ -105,19 +108,26 @@ No additional installation or dependencies are required.
 | Complete Task | ✅ |
 | Search Task | ✅ |
 | Priority Badge | ✅ |
+| Task Categories | ✅ |
 | Due Date | ✅ |
 | Progress Bar | ✅ |
 | Task Statistics | ✅ |
 | Local Storage | ✅ |
 | Dark Mode | ✅ |
 | Responsive Design | ✅ |
-
 ---
+## 🎯 Project Highlights
+
+- Built using HTML, CSS and JavaScript
+- Fully responsive layout
+- Persistent data using Local Storage
+- Modern user interface
+- Hosted using GitHub Pages
+- Version controlled with Git and GitHub
 
 ## 🔮 Future Enhancements
 
 - ⭐ Pin Important Tasks
-- 📂 Task Categories
 - 🔽 Sort by Priority
 - 📅 Sort by Due Date
 - 🔔 Browser Notifications
