@@ -21,7 +21,6 @@ const emptyMessage = document.getElementById("emptyMessage");
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
 const pendingTasks = document.getElementById("pendingTasks");
-
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const themeToggle = document.getElementById("themeToggle");
