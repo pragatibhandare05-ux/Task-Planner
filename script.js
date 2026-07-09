@@ -12,15 +12,19 @@ const addTaskBtn = document.getElementById("addTaskBtn");
 const priority = document.getElementById("priority");
 const category = document.getElementById("category");
 const dueDate = document.getElementById("dueDate");
+
 const searchTask = document.getElementById("searchTask");
+
 const taskList = document.querySelector(".task-list");
 const emptyMessage = document.getElementById("emptyMessage");
+
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
 const pendingTasks = document.getElementById("pendingTasks");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const themeToggle = document.getElementById("themeToggle");
+
 const filterButtons = document.querySelectorAll(".filter-btn");
 const sortTasks = document.getElementById("sortTasks");
 // ==========================================
