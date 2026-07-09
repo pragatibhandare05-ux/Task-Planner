@@ -777,3 +777,79 @@ select{
     font-weight:600;
 
 }
+/* ===========================
+   Filter Buttons
+=========================== */
+
+.filter-section{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.filter-btn{
+
+    padding:10px 22px;
+
+    border:none;
+
+    border-radius:25px;
+
+    cursor:pointer;
+
+    background:#e5e7eb;
+
+    color:#333;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.filter-btn:hover{
+
+    background:#4a90e2;
+
+    color:white;
+
+}
+
+.filter-btn.active{
+
+    background:#4a90e2;
+
+    color:white;
+
+}
+/* ===========================
+   Sort Section
+=========================== */
+
+.sort-section{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.sort-section label{
+    font-weight:600;
+    color:#555;
+}
+
+#sortTasks{
+    padding:10px 14px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:15px;
+    cursor:pointer;
+    outline:none;
+}
+
+#sortTasks:focus{
+    border-color:#4a90e2;
+}

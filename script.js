@@ -12,19 +12,17 @@ const addTaskBtn = document.getElementById("addTaskBtn");
 const priority = document.getElementById("priority");
 const category = document.getElementById("category");
 const dueDate = document.getElementById("dueDate");
-
 const searchTask = document.getElementById("searchTask");
-
 const taskList = document.querySelector(".task-list");
 const emptyMessage = document.getElementById("emptyMessage");
-
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
 const pendingTasks = document.getElementById("pendingTasks");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const themeToggle = document.getElementById("themeToggle");
-
+const filterButtons = document.querySelectorAll(".filter-btn");
+const sortTasks = document.getElementById("sortTasks");
 // ==========================================
 // Global Array
 // ==========================================
@@ -91,6 +89,158 @@ function updateProgress() {
     progressText.textContent =
         percentage + "%";
 
+}
+// ==============================
+// Filter Tasks
+// ==============================
+
+function filterTasks(filter){
+
+    const taskCards = document.querySelectorAll(".task");
+
+    taskCards.forEach(function(taskCard){
+
+        const checkbox = taskCard.querySelector("input[type='checkbox']");
+
+        if(filter === "all"){
+
+            taskCard.style.display = "flex";
+
+        }
+
+        else if(filter === "completed"){
+
+            if(checkbox.checked){
+
+                taskCard.style.display = "flex";
+
+            }else{
+
+                taskCard.style.display = "none";
+
+            }
+
+        }
+
+        else if(filter === "pending"){
+
+            if(!checkbox.checked){
+
+                taskCard.style.display = "flex";
+
+            }else{
+
+                taskCard.style.display = "none";
+
+            }
+
+        }
+
+    });
+
+}
+// ==============================
+// Sort Tasks
+// ==============================
+
+function sortTaskList(sortType) {
+
+    switch (sortType) {
+
+        case "newest":
+            // Latest added first
+            break;
+
+        case "oldest":
+            tasks.reverse();
+            break;
+
+        case "priority-high":
+
+            tasks.sort(function (a, b) {
+
+                const order = {
+                    "High": 3,
+                    "Medium": 2,
+                    "Low": 1
+                };
+
+                return order[b.priority] - order[a.priority];
+
+            });
+
+            break;
+
+        case "priority-low":
+
+            tasks.sort(function (a, b) {
+
+                const order = {
+                    "High": 3,
+                    "Medium": 2,
+                    "Low": 1
+                };
+
+                return order[a.priority] - order[b.priority];
+
+            });
+
+            break;
+
+        case "due-date":
+
+            tasks.sort(function (a, b) {
+
+                return new Date(a.dueDate) - new Date(b.dueDate);
+
+            });
+
+            break;
+
+        case "az":
+
+            tasks.sort(function (a, b) {
+
+                return a.text.localeCompare(b.text);
+
+            });
+
+            break;
+
+        case "za":
+
+            tasks.sort(function (a, b) {
+
+                return b.text.localeCompare(a.text);
+
+            });
+
+            break;
+
+    }
+
+    // Clear old task cards
+    taskList.innerHTML = "";
+
+    // Recreate all tasks
+    tasks.forEach(function (task) {
+
+        createTask(task);
+
+    });
+
+    // Show empty message if needed
+    if (tasks.length === 0) {
+
+        emptyMessage.style.display = "block";
+
+    } else {
+
+        emptyMessage.style.display = "none";
+
+    }
+
+    saveTasks();
 }
 
 // ==========================================
@@ -546,7 +696,42 @@ document.addEventListener("keydown", function (event) {
 // ==========================================
 
 loadTheme();
+// ==============================
+// Filter Button Events
+// ==============================
 
+filterButtons.forEach(function(button){
+
+    button.addEventListener("click", function(){
+
+        // Remove active class from all buttons
+        filterButtons.forEach(function(btn){
+
+            btn.classList.remove("active");
+
+        });
+
+        // Highlight selected button
+        button.classList.add("active");
+
+        // Get selected filter
+        const filter = button.dataset.filter;
+
+        // Filter tasks
+        filterTasks(filter);
+
+    });
+
+});
+// ==============================
+// Sort Event
+// ==============================
+
+sortTasks.addEventListener("change", function () {
+
+    sortTaskList(sortTasks.value);
+
+});
 loadTasks();
 
 refreshDashboard();
