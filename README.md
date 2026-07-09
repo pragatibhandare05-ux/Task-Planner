@@ -22,7 +22,6 @@ Then display them like this:
 ```markdown
 ![Home Page](screenshots/home-page.png)
 ```
-
 ---
 
 ## ✨ Features
