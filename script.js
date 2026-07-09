@@ -10,6 +10,7 @@
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const priority = document.getElementById("priority");
+const category = document.getElementById("category");
 const dueDate = document.getElementById("dueDate");
 
 const searchTask = document.getElementById("searchTask");
@@ -23,7 +24,6 @@ const pendingTasks = document.getElementById("pendingTasks");
 
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
-
 const themeToggle = document.getElementById("themeToggle");
 
 // ==========================================
@@ -214,6 +214,11 @@ function createTask(task) {
     const taskText = document.createElement("span");
     taskText.textContent = task.text;
 
+    // Category Badge
+    const categoryBadge = document.createElement("span");
+    categoryBadge.textContent = task.category;
+    categoryBadge.classList.add("category-badge");
+
     // Priority Badge
     const priorityBadge = createPriorityBadge(task.priority);
 
@@ -233,6 +238,7 @@ function createTask(task) {
     // Add Elements
     taskDiv.appendChild(checkbox);
     taskDiv.appendChild(taskText);
+    taskDiv.appendChild(categoryBadge);
     taskDiv.appendChild(priorityBadge);
     taskDiv.appendChild(dueDateBadge);
     taskDiv.appendChild(editBtn);
@@ -328,17 +334,19 @@ addTaskBtn.addEventListener("click", function () {
 
     }
 
-    const task = {
+  const task = {
 
-        text: text,
+    text: text,
 
-        completed: false,
+    completed: false,
 
-        priority: priority.value,
+    priority: priority.value,
 
-        dueDate: dueDate.value
+    category: category.value,
 
-    };
+    dueDate: dueDate.value
+
+};
 
     tasks.push(task);
 
@@ -351,6 +359,8 @@ addTaskBtn.addEventListener("click", function () {
     taskInput.value = "";
 
     priority.value = "Medium";
+
+    category.value = "Study";
 
     dueDate.value = "";
 

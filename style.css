@@ -475,6 +475,28 @@ body{
 
 }
 
+/* ===========================
+   Category Dropdown
+=========================== */
+
+#category{
+
+    padding:14px;
+    border:2px solid #d81175;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    outline:none;
+    transition:.3s;
+
+}
+
+#category:focus{
+
+    border-color:#e4089e;
+
+}
+
 /* ==========================================
    DUE DATE
 ========================================== */
@@ -734,5 +756,24 @@ select{
         transform:translateY(0);
 
     }
+
+}
+/* ===========================
+   Category Badge
+=========================== */
+
+.category-badge{
+
+    background:#3b82f6;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:600;
 
 }
