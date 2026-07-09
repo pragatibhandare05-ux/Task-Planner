@@ -9,6 +9,7 @@
 
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
+
 const priority = document.getElementById("priority");
 const category = document.getElementById("category");
 const dueDate = document.getElementById("dueDate");
@@ -21,14 +22,20 @@ const emptyMessage = document.getElementById("emptyMessage");
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
 const pendingTasks = document.getElementById("pendingTasks");
+
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
+
 const themeToggle = document.getElementById("themeToggle");
 
-const filterButtons = document.querySelectorAll(".filter-btn");
-const sortTasks = document.getElementById("sortTasks");
+const filterButtons =
+document.querySelectorAll(".filter-btn");
+
+const sortSelect =
+document.getElementById("sortTasks");
+
 // ==========================================
-// Global Array
+// Array
 // ==========================================
 
 let tasks = [];
@@ -37,7 +44,7 @@ let tasks = [];
 // Save Tasks
 // ==========================================
 
-function saveTasks() {
+function saveTasks(){
 
     localStorage.setItem(
         "tasks",
@@ -50,14 +57,15 @@ function saveTasks() {
 // Update Statistics
 // ==========================================
 
-function updateStatistics() {
+function updateStatistics(){
 
     const total = tasks.length;
 
     const completed =
-        tasks.filter(task => task.completed).length;
+    tasks.filter(task => task.completed).length;
 
-    const pending = total - completed;
+    const pending =
+    total - completed;
 
     totalTasks.textContent = total;
 
@@ -68,239 +76,87 @@ function updateStatistics() {
 }
 
 // ==========================================
-// Update Progress Bar
+// Update Progress
 // ==========================================
 
-function updateProgress() {
+function updateProgress(){
 
     const total = tasks.length;
 
     const completed =
-        tasks.filter(task => task.completed).length;
+    tasks.filter(task => task.completed).length;
 
     let percentage = 0;
 
-    if (total > 0) {
+    if(total>0){
 
         percentage =
-            Math.round((completed / total) * 100);
+        Math.round(
+            (completed/total)*100
+        );
 
     }
 
     progressFill.style.width =
-        percentage + "%";
+    percentage + "%";
 
     progressText.textContent =
-        percentage + "%";
+    percentage + "%";
 
-}
-// ==============================
-// Filter Tasks
-// ==============================
-
-function filterTasks(filter){
-
-    const taskCards = document.querySelectorAll(".task");
-
-    taskCards.forEach(function(taskCard){
-
-        const checkbox = taskCard.querySelector("input[type='checkbox']");
-
-        if(filter === "all"){
-
-            taskCard.style.display = "flex";
-
-        }
-
-        else if(filter === "completed"){
-
-            if(checkbox.checked){
-
-                taskCard.style.display = "flex";
-
-            }else{
-
-                taskCard.style.display = "none";
-
-            }
-
-        }
-
-        else if(filter === "pending"){
-
-            if(!checkbox.checked){
-
-                taskCard.style.display = "flex";
-
-            }else{
-
-                taskCard.style.display = "none";
-
-            }
-
-        }
-
-    });
-
-}
-// ==============================
-// Sort Tasks
-// ==============================
-
-function sortTaskList(sortType) {
-
-    switch (sortType) {
-
-        case "newest":
-            // Latest added first
-            break;
-
-        case "oldest":
-            tasks.reverse();
-            break;
-
-        case "priority-high":
-
-            tasks.sort(function (a, b) {
-
-                const order = {
-                    "High": 3,
-                    "Medium": 2,
-                    "Low": 1
-                };
-
-                return order[b.priority] - order[a.priority];
-
-            });
-
-            break;
-
-        case "priority-low":
-
-            tasks.sort(function (a, b) {
-
-                const order = {
-                    "High": 3,
-                    "Medium": 2,
-                    "Low": 1
-                };
-
-                return order[a.priority] - order[b.priority];
-
-            });
-
-            break;
-
-        case "due-date":
-
-            tasks.sort(function (a, b) {
-
-                return new Date(a.dueDate) - new Date(b.dueDate);
-
-            });
-
-            break;
-
-        case "az":
-
-            tasks.sort(function (a, b) {
-
-                return a.text.localeCompare(b.text);
-
-            });
-
-            break;
-
-        case "za":
-
-            tasks.sort(function (a, b) {
-
-                return b.text.localeCompare(a.text);
-
-            });
-
-            break;
-
-    }
-
-    // Clear old task cards
-    taskList.innerHTML = "";
-
-    // Recreate all tasks
-    tasks.forEach(function (task) {
-
-        createTask(task);
-
-    });
-
-    // Show empty message if needed
-    if (tasks.length === 0) {
-
-        emptyMessage.style.display = "block";
-
-    } else {
-
-        emptyMessage.style.display = "none";
-
-    }
-
-    saveTasks();
 }
 
 // ==========================================
-// Refresh Dashboard
+// Dashboard
 // ==========================================
 
-function refreshDashboard() {
+function refreshDashboard(){
 
     updateStatistics();
 
     updateProgress();
 
-    if (tasks.length === 0) {
+    if(tasks.length===0){
 
-        emptyMessage.style.display = "block";
+        emptyMessage.style.display="block";
 
-    } else {
+    }
 
-        emptyMessage.style.display = "none";
+    else{
+
+        emptyMessage.style.display="none";
 
     }
 
 }
 
 // ==========================================
-// Create Priority Badge
+// Priority Badge
 // ==========================================
 
-function createPriorityBadge(level) {
+function createPriorityBadge(level){
 
     const badge =
-        document.createElement("span");
+    document.createElement("span");
 
-    badge.classList.add(
-        "priority-badge"
-    );
+    badge.classList.add("priority-badge");
 
     badge.textContent = level;
 
-    switch (level) {
+    if(level==="High"){
 
-        case "High":
+        badge.classList.add("high");
 
-            badge.classList.add("high");
+    }
 
-            break;
+    else if(level==="Medium"){
 
-        case "Medium":
+        badge.classList.add("medium");
 
-            badge.classList.add("medium");
+    }
 
-            break;
+    else{
 
-        default:
-
-            badge.classList.add("low");
+        badge.classList.add("low");
 
     }
 
@@ -309,35 +165,51 @@ function createPriorityBadge(level) {
 }
 
 // ==========================================
-// Create Due Date Badge
+// Category Badge
 // ==========================================
 
-function createDueDate(date) {
+function createCategoryBadge(cat){
 
     const badge =
-        document.createElement("span");
+    document.createElement("span");
+
+    badge.classList.add("category-badge");
+
+    badge.textContent = cat;
+
+    return badge;
+
+}
+
+// ==========================================
+// Due Date Badge
+// ==========================================
+
+function createDateBadge(date){
+
+    const badge =
+    document.createElement("span");
 
     badge.classList.add("due-date");
 
-    if (date === "") {
+    if(date===""){
 
-        badge.textContent = "No Date";
+        badge.textContent="No Date";
 
-    } else {
+    }
 
-        const formatted =
-            new Date(date)
-            .toLocaleDateString(
-                "en-GB",
-                {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                }
-            );
+    else{
 
         badge.textContent =
-            "📅 " + formatted;
+        "📅 " +
+        new Date(date).toLocaleDateString(
+            "en-GB",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
 
     }
 
@@ -348,13 +220,12 @@ function createDueDate(date) {
 // Create Task Card
 // ==========================================
 
-function createTask(task) {
+function createTask(task){
 
-    // Task Card
     const taskDiv = document.createElement("div");
     taskDiv.classList.add("task");
 
-    if (task.completed) {
+    if(task.completed){
         taskDiv.classList.add("completed");
     }
 
@@ -365,28 +236,43 @@ function createTask(task) {
 
     // Task Text
     const taskText = document.createElement("span");
+    taskText.classList.add("task-text");
     taskText.textContent = task.text;
 
-    // Category Badge
-    const categoryBadge = document.createElement("span");
-    categoryBadge.textContent = task.category;
-    categoryBadge.classList.add("category-badge");
+    // Category
+    const categoryBadge =
+    createCategoryBadge(task.category);
 
-    // Priority Badge
-    const priorityBadge = createPriorityBadge(task.priority);
+    // Priority
+    const priorityBadge =
+    createPriorityBadge(task.priority);
 
-    // Due Date Badge
-    const dueDateBadge = createDueDate(task.dueDate);
+    // Due Date
+    const dueDateBadge =
+    createDateBadge(task.dueDate);
+
+    // Buttons Container
+    const buttonGroup =
+    document.createElement("div");
+
+    buttonGroup.classList.add("task-buttons");
 
     // Edit Button
-    const editBtn = document.createElement("button");
+    const editBtn =
+    document.createElement("button");
+
     editBtn.textContent = "✏ Edit";
     editBtn.classList.add("edit-btn");
 
     // Delete Button
-    const deleteBtn = document.createElement("button");
+    const deleteBtn =
+    document.createElement("button");
+
     deleteBtn.textContent = "🗑 Delete";
     deleteBtn.classList.add("delete-btn");
+
+    buttonGroup.appendChild(editBtn);
+    buttonGroup.appendChild(deleteBtn);
 
     // Add Elements
     taskDiv.appendChild(checkbox);
@@ -394,8 +280,7 @@ function createTask(task) {
     taskDiv.appendChild(categoryBadge);
     taskDiv.appendChild(priorityBadge);
     taskDiv.appendChild(dueDateBadge);
-    taskDiv.appendChild(editBtn);
-    taskDiv.appendChild(deleteBtn);
+    taskDiv.appendChild(buttonGroup);
 
     taskList.appendChild(taskDiv);
 
@@ -403,14 +288,18 @@ function createTask(task) {
     // Complete Task
     // ======================================
 
-    checkbox.addEventListener("change", function () {
+    checkbox.addEventListener("change",function(){
 
         task.completed = checkbox.checked;
 
-        if (task.completed) {
+        if(task.completed){
+
             taskDiv.classList.add("completed");
-        } else {
+
+        }else{
+
             taskDiv.classList.remove("completed");
+
         }
 
         saveTasks();
@@ -422,16 +311,17 @@ function createTask(task) {
     // Edit Task
     // ======================================
 
-    editBtn.addEventListener("click", function () {
+    editBtn.addEventListener("click",function(){
 
-        const newTask = prompt(
-            "Edit your task:",
+        const newTask =
+        prompt(
+            "Edit your task",
             task.text
         );
 
-        if (newTask === null) return;
+        if(newTask===null) return;
 
-        if (newTask.trim() === "") {
+        if(newTask.trim()===""){
 
             alert("Task cannot be empty.");
 
@@ -439,9 +329,11 @@ function createTask(task) {
 
         }
 
-        task.text = newTask.trim();
+        task.text =
+        newTask.trim();
 
-        taskText.textContent = task.text;
+        taskText.textContent =
+        task.text;
 
         saveTasks();
 
@@ -451,13 +343,14 @@ function createTask(task) {
     // Delete Task
     // ======================================
 
-    deleteBtn.addEventListener("click", function () {
+    deleteBtn.addEventListener("click",function(){
 
-        const index = tasks.indexOf(task);
+        const index =
+        tasks.indexOf(task);
 
-        if (index > -1) {
+        if(index>-1){
 
-            tasks.splice(index, 1);
+            tasks.splice(index,1);
 
         }
 
@@ -475,11 +368,12 @@ function createTask(task) {
 // Add Task
 // ==========================================
 
-addTaskBtn.addEventListener("click", function () {
+addTaskBtn.addEventListener("click",function(){
 
-    const text = taskInput.value.trim();
+    const text =
+    taskInput.value.trim();
 
-    if (text === "") {
+    if(text===""){
 
         alert("Please enter a task.");
 
@@ -487,19 +381,19 @@ addTaskBtn.addEventListener("click", function () {
 
     }
 
-  const task = {
+    const task={
 
-    text: text,
+        text:text,
 
-    completed: false,
+        completed:false,
 
-    priority: priority.value,
+        priority:priority.value,
 
-    category: category.value,
+        category:category.value,
 
-    dueDate: dueDate.value
+        dueDate:dueDate.value
 
-};
+    };
 
     tasks.push(task);
 
@@ -509,23 +403,23 @@ addTaskBtn.addEventListener("click", function () {
 
     refreshDashboard();
 
-    taskInput.value = "";
+    taskInput.value="";
 
-    priority.value = "Medium";
+    priority.value="Medium";
 
-    category.value = "Study";
+    category.value="Study";
 
-    dueDate.value = "";
+    dueDate.value="";
 
 });
 
 // ==========================================
-// Press Enter
+// Enter Key
 // ==========================================
 
-taskInput.addEventListener("keypress", function (event) {
+taskInput.addEventListener("keypress",function(event){
 
-    if (event.key === "Enter") {
+    if(event.key==="Enter"){
 
         addTaskBtn.click();
 
@@ -533,22 +427,22 @@ taskInput.addEventListener("keypress", function (event) {
 
 });
 // ==========================================
-// Live Search
+// Search Tasks
 // ==========================================
 
 searchTask.addEventListener("keyup", function () {
 
     const value = searchTask.value.toLowerCase();
 
-    const taskCards = document.querySelectorAll(".task");
+    const cards = document.querySelectorAll(".task");
 
-    taskCards.forEach(function (card) {
+    cards.forEach(function (card) {
 
-        const text = card.querySelector("span").textContent.toLowerCase();
+        const text = card.querySelector(".task-text").textContent.toLowerCase();
 
         if (text.includes(value)) {
 
-            card.style.display = "";
+            card.style.display = "flex";
 
         } else {
 
@@ -561,12 +455,165 @@ searchTask.addEventListener("keyup", function () {
 });
 
 // ==========================================
+// Filter Tasks
+// ==========================================
+
+function filterTasks(type) {
+
+    const cards = document.querySelectorAll(".task");
+
+    cards.forEach(function (card) {
+
+        const checked =
+            card.querySelector("input").checked;
+
+        switch (type) {
+
+            case "all":
+                card.style.display = "flex";
+                break;
+
+            case "completed":
+                card.style.display =
+                    checked ? "flex" : "none";
+                break;
+
+            case "pending":
+                card.style.display =
+                    !checked ? "flex" : "none";
+                break;
+
+        }
+
+    });
+
+}
+
+filterButtons.forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        filterButtons.forEach(function (btn) {
+
+            btn.classList.remove("active");
+
+        });
+
+        button.classList.add("active");
+
+        filterTasks(button.dataset.filter);
+
+    });
+
+});
+
+// ==========================================
+// Sort Tasks
+// ==========================================
+
+function sortTaskList(type) {
+
+    switch (type) {
+
+        case "priority-high":
+
+            tasks.sort((a, b) => {
+
+                const order = {
+                    High: 3,
+                    Medium: 2,
+                    Low: 1
+                };
+
+                return order[b.priority] - order[a.priority];
+
+            });
+
+            break;
+
+        case "priority-low":
+
+            tasks.sort((a, b) => {
+
+                const order = {
+                    High: 3,
+                    Medium: 2,
+                    Low: 1
+                };
+
+                return order[a.priority] - order[b.priority];
+
+            });
+
+            break;
+
+        case "due-date":
+
+            tasks.sort((a, b) => {
+
+                return new Date(a.dueDate || "9999-12-31")
+                    - new Date(b.dueDate || "9999-12-31");
+
+            });
+
+            break;
+
+        case "az":
+
+            tasks.sort((a, b) =>
+                a.text.localeCompare(b.text));
+
+            break;
+
+        case "za":
+
+            tasks.sort((a, b) =>
+                b.text.localeCompare(a.text));
+
+            break;
+
+        case "oldest":
+
+            tasks.reverse();
+
+            break;
+
+        case "newest":
+
+        default:
+
+            break;
+
+    }
+
+    taskList.innerHTML = "";
+
+    tasks.forEach(function (task) {
+
+        createTask(task);
+
+    });
+
+    refreshDashboard();
+
+    saveTasks();
+
+}
+
+sortSelect.addEventListener("change", function () {
+
+    sortTaskList(sortSelect.value);
+
+});
+
+// ==========================================
 // Dark Mode
 // ==========================================
 
 function loadTheme() {
 
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme =
+        localStorage.getItem("theme");
 
     if (savedTheme === "dark") {
 
@@ -575,8 +622,6 @@ function loadTheme() {
         themeToggle.textContent = "☀️";
 
     } else {
-
-        document.body.classList.remove("dark-mode");
 
         themeToggle.textContent = "🌙";
 
@@ -610,17 +655,12 @@ themeToggle.addEventListener("click", function () {
 
 function loadTasks() {
 
-    const storedTasks = localStorage.getItem("tasks");
+    const storedTasks =
+        localStorage.getItem("tasks");
 
-    if (storedTasks) {
-
-        tasks = JSON.parse(storedTasks);
-
-    } else {
-
-        tasks = [];
-
-    }
+    tasks = storedTasks
+        ? JSON.parse(storedTasks)
+        : [];
 
     taskList.innerHTML = "";
 
@@ -635,109 +675,10 @@ function loadTasks() {
 }
 
 // ==========================================
-// Sort Tasks (High → Medium → Low)
-// ==========================================
-
-function sortTasks() {
-
-    const order = {
-
-        High: 1,
-
-        Medium: 2,
-
-        Low: 3
-
-    };
-
-    tasks.sort(function (a, b) {
-
-        return order[a.priority] - order[b.priority];
-
-    });
-
-    saveTasks();
-
-    taskList.innerHTML = "";
-
-    tasks.forEach(function (task) {
-
-        createTask(task);
-
-    });
-
-    refreshDashboard();
-
-}
-
-// ==========================================
-// Optional:
-// Press Ctrl + Shift + S to Sort Tasks
-// ==========================================
-
-document.addEventListener("keydown", function (event) {
-
-    if (
-
-        event.ctrlKey &&
-
-        event.shiftKey &&
-
-        event.key.toLowerCase() === "s"
-
-    ) {
-
-        event.preventDefault();
-
-        sortTasks();
-
-    }
-
-});
-
-// ==========================================
-// App Initialization
+// Initialize App
 // ==========================================
 
 loadTheme();
-// ==============================
-// Filter Button Events
-// ==============================
-
-filterButtons.forEach(function(button){
-
-    button.addEventListener("click", function(){
-
-        // Remove active class from all buttons
-        filterButtons.forEach(function(btn){
-
-            btn.classList.remove("active");
-
-        });
-
-        // Highlight selected button
-        button.classList.add("active");
-
-        // Get selected filter
-        const filter = button.dataset.filter;
-
-        // Filter tasks
-        filterTasks(filter);
-
-    });
-
-});
-// ==============================
-// Sort Event
-// ==============================
-
-sortTasks.addEventListener("change", function () {
-
-    sortTaskList(sortTasks.value);
-
-});
 loadTasks();
-
-refreshDashboard();
 
 console.log("✅ Task Planner Pro Loaded Successfully");
