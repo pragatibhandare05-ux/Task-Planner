@@ -441,13 +441,6 @@ function deleteTask(id){
 
 
 }
-
-
-
-
-
-
-
 // ===============================
 // Edit Task
 // ===============================
@@ -509,13 +502,6 @@ function editTask(id){
 
 
 }
-
-
-
-
-
-
-
 
 // ===============================
 // Task Counter
@@ -631,15 +617,6 @@ function(button){
 
 
 });
-
-
-
-
-
-
-
-
-
 // ===============================
 // Sorting
 // ===============================
@@ -647,86 +624,46 @@ function(button){
 
 if(sortSelect){
 
-
-
 sortSelect.addEventListener(
 "change",
 function(){
 
-
-
     let value =
     sortSelect.value;
 
-
-
     if(value==="newest"){
-
-
 
         tasks.sort(
         (a,b)=>
         b.id-a.id
         );
 
-
     }
 
-
-
-
     else if(value==="oldest"){
-
-
 
         tasks.sort(
         (a,b)=>
         a.id-b.id
         );
 
-
     }
 
-
-
-
     else if(value==="completed"){
-
-
-
         tasks.sort(
         (a,b)=>
         b.completed-a.completed
         );
-
-
     }
 
-
-
-
-
     saveTasks();
-
-
     displayTasks();
-
-
-
 });
-
-
-
 }
 // ===============================
 // Toast Notification
 // ===============================
-
-
 function showToast(message){
-
-
-
     if(!toast){
 
         alert(message);
@@ -734,51 +671,24 @@ function showToast(message){
         return;
 
     }
-
-
-
-
     toast.innerText =
     message;
-
-
-
     toast.classList.add(
         "show"
     );
-
-
-
     setTimeout(
     function(){
-
-
-
         toast.classList.remove(
             "show"
         );
-
-
-
     },3000);
-
-
-
 }
-
 function checkTaskReminder(){
-
-
     const today =
     new Date()
     .toISOString()
     .split("T")[0];
-
-
-
     tasks.forEach(function(task){
-
-
         if(
             task.dueDate === today &&
             !task.completed
@@ -811,13 +721,6 @@ function checkTaskReminder(){
 
 
 }
-
-
-
-
-
-
-
 // ===============================
 // Enter Key Add Task
 // ===============================
@@ -845,9 +748,6 @@ function(event){
 
 
 });
-
-
-
 }
 
 // ===============================
@@ -926,105 +826,43 @@ function(){
 
 
     }
-
-
-
-
-
     let result =
     confirm(
         "Delete all tasks?"
     );
-
-
-
-
     if(result){
-
-
-
         tasks=[];
-
-
-
         saveTasks();
-
-
-
         displayTasks();
-
-
-
         updateCounter();
         updateProgress();
-
-
-
         showToast(
             "All Tasks Deleted"
         );
 
 
     }
-
-
-
-
 });
-
-
-
 }
-
-
-
-
-
-
-
-
-
 // ===============================
 // Export Tasks
 // ===============================
-
-
 if(exportBtn){
-
-
-
 exportBtn.addEventListener(
 "click",
 function(){
-
-
-
     if(tasks.length===0){
-
-
         showToast(
             "No tasks to export"
         );
-
-
         return;
-
-
     }
-
-
-
-
     const file =
     JSON.stringify(
         tasks,
         null,
         2
     );
-
-
-
-
     const blob =
     new Blob(
         [file],
@@ -1033,108 +871,44 @@ function(){
             "application/json"
         }
     );
-
-
-
-
     const url =
     URL.createObjectURL(
         blob
     );
-
-
-
-
-
     const link =
     document.createElement(
         "a"
     );
-
-
-
     link.href=url;
-
-
-
     link.download =
     "tasks-backup.json";
-
-
-
     link.click();
-
-
-
-
     URL.revokeObjectURL(
         url
     );
-
-
-
     showToast(
         "Tasks Exported"
     );
-
-
-
 });
 
-
-
 }
-
-
-
-
-
-
-
-
-
-
 // ===============================
 // Import Tasks
 // ===============================
-
-
 if(importInput){
-
-
-
 importInput.addEventListener(
 "change",
 function(event){
-
-
-
     const file =
     event.target.files[0];
-
-
-
     if(!file){
-
         return;
 
     }
-
-
-
-
-
     const reader =
     new FileReader();
-
-
-
-
     reader.onload =
     function(e){
-
-
-
         try{
 
 
@@ -1189,115 +963,101 @@ function(event){
 
 
         }
-
-
-
     };
-
-
-
-
 
     reader.readAsText(file);
 
-
-
 });
-
-
-
 }
 // ===============================
 // Update Progress Bar
 // ===============================
-
-
 function updateProgress(){
-
-
     if(tasks.length === 0){
-
-
         if(progressText){
 
             progressText.innerText = "0%";
 
         }
-
-
         if(progressFill){
 
             progressFill.style.width = "0%";
 
         }
-
-
         return;
-
     }
-
-
-
-
     const completed =
     tasks.filter(
         task => task.completed
     ).length;
-
-
-
-
     const percentage =
     Math.round(
         (completed / tasks.length) * 100
     );
-
-
-
-
-
     if(progressText){
 
         progressText.innerText =
         percentage + "%";
 
     }
-
-
-
-
-
     if(progressFill){
 
         progressFill.style.width =
         percentage + "%";
 
     }
+}
+// ===============================
+// Dark / Light Theme
+// ===============================
+
+if(themeBtn){
+
+    themeBtn.addEventListener(
+        "click",
+        function(){
+
+            document.body.classList.toggle("dark");
 
 
+            let theme =
+            document.body.classList.contains("dark")
+            ?
+            "dark"
+            :
+            "light";
+
+
+            localStorage.setItem(
+                "theme",
+                theme
+            );
+
+
+        }
+    );
 
 }
 
 
+// Load Saved Theme
+
+const savedTheme =
+localStorage.getItem("theme");
 
 
+if(savedTheme === "dark"){
 
+    document.body.classList.add("dark");
 
-
+}
 // ===============================
 // Start Application
 // ===============================
-
-
 displayTasks();
-
-
 displayTasks();
-
 updateCounter();
-
 updateProgress();
-
 requestNotificationPermission();
 
 checkTaskReminder();
@@ -1306,18 +1066,11 @@ setInterval(
     60000
 );
 function requestNotificationPermission(){
-
-
     if(
         "Notification" in window
     ){
-
         Notification.requestPermission();
-
-
     }
-
-
 }
 console.log(
     "Task Planner Loaded Successfully"
