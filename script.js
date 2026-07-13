@@ -1075,3 +1075,27 @@ function requestNotificationPermission(){
 console.log(
     "Task Planner Loaded Successfully"
 );
+// ===============================
+// Register Service Worker
+// ===============================
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker
+            .register("service-worker.js")
+            .then(() => {
+
+                console.log("Service Worker Registered Successfully");
+
+            })
+            .catch((error) => {
+
+                console.log("Service Worker Registration Failed", error);
+
+            });
+
+    });
+
+}
