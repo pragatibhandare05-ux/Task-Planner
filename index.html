@@ -2,357 +2,387 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Task Planner Pro</title>
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-        <link rel="manifest" href="manifest.json">
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-    <div class="background-shapes">
-        <span></span>
-        <span></span>
-        <span></span>
+<div class="app">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="welcome">
+
+            <h2 id="greeting">👋 Welcome</h2>
+
+            <p>Stay productive today</p>
+
+        </div>
+
+        <button id="themeToggle">
+
+            <i class="fa-solid fa-moon"></i>
+
+        </button>
+
+    </header>
+
+    <!-- ================= SEARCH ================= -->
+
+    <section class="search">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input
+                type="text"
+                id="searchTask"
+                placeholder="Search your tasks...">
+
+        </div>
+
+    </section>
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section class="dashboard">
+
+        <div class="card">
+
+            <i class="fa-solid fa-list-check"></i>
+
+            <h3 id="totalTasks">0</h3>
+
+            <p>Total Tasks</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <h3 id="completedTasks">0</h3>
+
+            <p>Completed</p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-clock"></i>
+
+            <h3 id="pendingTasks">0</h3>
+
+            <p>Pending</p>
+
+        </div>
+
+    </section>
+
+    <!-- ================= PROGRESS ================= -->
+
+    <section class="progress-section">
+
+        <div class="progress-title">
+
+            <span>Today's Progress</span>
+
+            <span id="progressText">0%</span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div id="progressFill"></div>
+
+        </div>
+
+    </section>
+
+    <!-- Quote -->
+
+    <div id="quoteBox" class="quote-box">
+
+        <h3>🎉 Congratulations!</h3>
+
+        <p id="quoteText"></p>
+
     </div>
+<div class="task-top">
 
-    <div class="container">
 
-        <!-- ================= HEADER ================= -->
+    <h2>Your Tasks</h2>
 
-        <header class="header">
 
-            <div class="logo-section">
+    <div class="filters">
 
-                <div class="logo-icon">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
 
-                <div>
+        <!-- Priority Filter -->
 
-                    <h1>Task Planner <span>Pro</span></h1>
+        <select id="priorityFilter">
 
-                    <p>
-                        Plan Better • Work Smarter • Stay Organized
-                    </p>
+            <option value="all">
+                🔥 All Priority
+            </option>
 
-                </div>
+            <option value="high">
+                🔥 High
+            </option>
 
-            </div>
+            <option value="medium">
+                ⚠️ Medium
+            </option>
 
-            <button id="themeToggle" title="Toggle Theme">
-                <i class="fa-solid fa-moon"></i>
-            </button>
+            <option value="low">
+                🌱 Low
+            </option>
 
-        </header>
+        </select>
 
-        <!-- ================= SEARCH ================= -->
 
-        <section class="search-section">
 
-            <div class="search-box">
+        <!-- Category Filter -->
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+        <select id="categoryFilter">
 
-                <input
-                    type="text"
-                    id="searchTask"
-                    placeholder="Search your tasks..."
-                >
 
-            </div>
+            <option value="all">
+                📂 All Categories
+            </option>
 
-        </section>
 
-        <!-- ================= FILTER ================= -->
+            <option value="Study">
+                📚 Study
+            </option>
 
-        <section class="filter-sort-wrapper">
 
-            <div class="filter-section">
+            <option value="Work">
+                💼 Work
+            </option>
 
-                <button class="filter-btn active" data-filter="all">
-                    All
-                </button>
 
-                <button class="filter-btn" data-filter="pending">
-                    Pending
-                </button>
+            <option value="Personal">
+                🏠 Personal
+            </option>
 
-                <button class="filter-btn" data-filter="completed">
-                    Completed
-                </button>
 
-            </div>
+            <option value="Health">
+                🏋️ Health
+            </option>
 
-            <div class="sort-section">
 
-                <label for="sortTasks">
-                    <i class="fa-solid fa-arrow-down-wide-short"></i>
-                    Sort
-                </label>
+            <option value="Other">
+                📌 Other
+            </option>
 
-                <select id="sortTasks">
 
-                    <option value="newest">Newest</option>
+        </select>
 
-                    <option value="oldest">Oldest</option>
 
-                    <option value="priority-high">
-                        Priority High → Low
-                    </option>
-
-                    <option value="priority-low">
-                        Priority Low → High
-                    </option>
-
-                    <option value="due-date">
-                        Due Date
-                    </option>
-
-                    <option value="az">
-                        A → Z
-                    </option>
-
-                    <option value="za">
-                        Z → A
-                    </option>
-
-                </select>
-
-            </div>
-
-        </section>
-
-        <!-- ================= ADD TASK ================= -->
-
-        <section class="task-form">
-
-            <div class="section-title">
-
-                <i class="fa-solid fa-circle-plus"></i>
-
-                <h2>Add New Task</h2>
-
-            </div>
-
-            <div class="form-grid">
-
-                <input
-                    type="text"
-                    id="taskInput"
-                    placeholder="Enter task title..."
-                >
-
-                <select id="priority">
-
-                    <option value="High">
-                        🔴 High
-                    </option>
-
-                    <option value="Medium" selected>
-                        🟡 Medium
-                    </option>
-
-                    <option value="Low">
-                        🟢 Low
-                    </option>
-
-                </select>
-
-                <select id="category">
-
-                    <option value="Study">
-                        📚 Study
-                    </option>
-
-                    <option value="Work">
-                        💼 Work
-                    </option>
-
-                    <option value="Personal">
-                        🏠 Personal
-                    </option>
-
-                    <option value="Shopping">
-                        🛒 Shopping
-                    </option>
-
-                    <option value="Fitness">
-                        💪 Fitness
-                    </option>
-
-                </select>
-
-                <input
-                    type="date"
-                    id="dueDate"
-                >
-                <div class="time-input">
-
-    <select id="reminderHour">
-
-        <option value="01">01</option>
-        <option value="02">02</option>
-        <option value="03">03</option>
-        <option value="04">04</option>
-        <option value="05">05</option>
-        <option value="06">06</option>
-        <option value="07">07</option>
-        <option value="08">08</option>
-        <option value="09">09</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-
-    </select>
-
-
-    <select id="reminderMinute">
-
-        <option value="00">00</option>
-        <option value="05">05</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="30">30</option>
-        <option value="35">35</option>
-        <option value="40">40</option>
-        <option value="45">45</option>
-        <option value="50">50</option>
-        <option value="55">55</option>
-
-    </select>
-
-
-    <select id="reminderPeriod">
-
-        <option value="AM">AM</option>
-
-        <option value="PM">PM</option>
-
-    </select>
+    </div>
 
 
 </div>
+        <!-- Task List -->
 
-            </div>
+        <div class="task-list" id="taskList"></div>
 
-            <button id="addTaskBtn">
+        <!-- Empty Message -->
 
-                <i class="fa-solid fa-plus"></i>
+        <div id="emptyMessage" class="empty-state">
 
+            <i class="fa-solid fa-clipboard-list"></i>
+
+            <h3>No Tasks Yet</h3>
+
+            <p>Add your first task.</p>
+
+        </div>
+
+    </section>
+<!-- ==========================
+     BOTTOM NAVIGATION
+========================== -->
+
+
+<nav class="bottom-nav">
+
+
+    <button class="nav-item active">
+
+        <i class="fa-solid fa-house"></i>
+
+        <span>Home</span>
+
+    </button>
+
+
+
+    <button class="nav-item">
+
+        <i class="fa-solid fa-list-check"></i>
+
+        <span>Tasks</span>
+
+    </button>
+
+    <button class="nav-item add-nav"
+id="openTaskModal">
+        <i class="fa-solid fa-plus"></i>
+
+
+    </button>
+
+
+
+
+    <button class="nav-item">
+
+
+        <i class="fa-solid fa-chart-line"></i>
+
+        <span>Stats</span>
+
+
+    </button>
+
+
+
+
+    <button class="nav-item">
+
+
+        <i class="fa-solid fa-gear"></i>
+
+        <span>Settings</span>
+
+
+    </button>
+
+
+</nav>
+</div>
+<!-- ===========================
+     ADD / EDIT TASK MODAL
+=========================== -->
+
+<div class="modal-overlay" id="modalOverlay">
+
+
+    <div class="bottom-sheet">
+
+
+        <div class="sheet-header">
+
+
+            <h2 id="modalTitle">
                 Add Task
+            </h2>
+
+
+            <button id="closeModal">
+
+                <i class="fa-solid fa-xmark"></i>
 
             </button>
 
-        </section>
 
-        <!-- ================= DASHBOARD ================= -->
+        </div>
 
-        <section class="dashboard">
+        <input 
+        type="text"
+        id="taskTitle"
+        placeholder="Enter task title">
+        <select id="taskCategory">
 
-            <div class="card">
+    <option value="Study">
+        📚 Study
+    </option>
 
-                <i class="fa-solid fa-list-check"></i>
+    <option value="Work">
+        💼 Work
+    </option>
 
-                <h3>Total Tasks</h3>
+    <option value="Personal">
+        🏠 Personal
+    </option>
 
-                <span id="totalTasks">0</span>
+    <option value="Health">
+        🏋️ Health
+    </option>
 
-            </div>
+    <option value="Other">
+        📌 Other
+    </option>
 
-            <div class="card">
+</select>
+    <select id="taskPriority">
 
-                <i class="fa-solid fa-circle-check"></i>
 
-                <h3>Completed</h3>
+<option value="high">
 
-                <span id="completedTasks">0</span>
+    🔥 High Priority
 
-            </div>
+</option>
 
-            <div class="card">
 
-                <i class="fa-solid fa-clock"></i>
+<option value="medium">
 
-                <h3>Pending</h3>
+    ⚠️ Medium Priority
 
-                <span id="pendingTasks">0</span>
+</option>
 
-            </div>
 
-        </section>
+<option value="low">
 
-        <!-- ================= PROGRESS ================= -->
+    🌱 Low Priority
 
-        <section class="progress-section">
+</option>
 
-            <div class="progress-header">
 
-                <h3>Today's Progress</h3>
+</select>
+      <input 
+        type="date"
+        id="taskDate">
+        <button id="addTaskBtn">
+            Add Task
+        </button>
+    </div>
+</div>
 
-                <span id="progressText">0%</span>
+<!-- ================= TOAST ================= -->
 
-            </div>
+<div id="toast" class="toast"></div>
 
-            <div class="progress-bar">
-
-                <div id="progressFill"></div>
-
-            </div>
-
-        </section>
-
-        <!-- ================= TASK LIST ================= -->
-
-        <section class="task-section">
-
-            <div class="section-title">
-
-                <i class="fa-solid fa-list"></i>
-
-                <h2>Your Tasks</h2>
-
-            </div>
-
-            <div class="task-list" id="taskList"></div>
-
-                <div id="emptyMessage" class="empty-state">
-
-                    <i class="fa-solid fa-clipboard-list"></i>
-
-                    <h2>No Tasks Yet</h2>
-
-                    <p>
-                        Add your first task and start being productive.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-       </div>
-
-    <div id="toast"></div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
+
 </html>

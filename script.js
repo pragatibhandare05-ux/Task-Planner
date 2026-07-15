@@ -1,42 +1,35 @@
-// ======================================
-// TASK PLANNER APP
-// FINAL JAVASCRIPT FILE
-// ======================================
-
 // ===============================
-// Selecting Elements
+// SELECT ELEMENTS
 // ===============================
+const taskInput = document.getElementById("taskTitle");
 
-const taskInput = document.getElementById("taskInput");
+const categoryInput = document.getElementById("taskCategory");
+
+const priorityInput = document.getElementById("taskPriority");
+
+const dueDateInput = document.getElementById("taskDate");
 
 const addTaskBtn = document.getElementById("addTaskBtn");
 
-const taskList = document.querySelector(".task-list");
-
-
-const priorityInput = document.getElementById("priority");
-
-const categoryInput = document.getElementById("category");
-
-const dueDateInput = document.getElementById("dueDate");
-
-const reminderTimeInput = document.getElementById("reminderTime");
-
-const reminderHour = document.getElementById("reminderHour");
-
-const reminderMinute = document.getElementById("reminderMinute");
-
-const reminderPeriod = document.getElementById("reminderPeriod");
-
-const searchInput = document.getElementById("searchTask");
-
-
-const sortSelect = document.getElementById("sortTasks");
-
+const taskList = document.getElementById("taskList");
 
 const themeBtn = document.getElementById("themeToggle");
 
+const modalOverlay = document.getElementById("modalOverlay");
 
+const modalTitle = document.getElementById("modalTitle");
+
+const openTaskModal = document.getElementById("openTaskModal");
+
+const closeModal = document.getElementById("closeModal");
+
+const searchInput = document.getElementById("searchTask");
+
+const priorityFilter = document.getElementById("priorityFilter");
+
+const categoryFilter = document.getElementById("categoryFilter");
+
+const emptyMessage = document.getElementById("emptyMessage");
 
 const totalTask = document.getElementById("totalTasks");
 
@@ -44,122 +37,96 @@ const completedTask = document.getElementById("completedTasks");
 
 const pendingTask = document.getElementById("pendingTasks");
 
-
-
 const toast = document.getElementById("toast");
 
-const progressText = document.getElementById("progressText");
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-const progressFill = document.getElementById("progressFill");
-
-const clearAllBtn = document.getElementById("clearAllBtn");
-
-const exportBtn = document.getElementById("exportBtn");
-
-const importInput = document.getElementById("importInput");
-
-const emptyMessage = document.getElementById("emptyMessage");
-
-
+let editTaskId = null;
 // ===============================
-// Task Array
+// ADD / UPDATE BUTTON
 // ===============================
-
-let tasks = JSON.parse(
-    localStorage.getItem("tasks")
-) || [];
-
-
-
-// Current Filter
-
-let currentFilter = "all";
-// ===============================
-// Add Task
-// ===============================
-
-
 addTaskBtn.addEventListener(
 "click",
-addTask
+handleTask
 );
 
-
-
-function addTask(){
-
-
-    const title = taskInput.value.trim();
-
-
+// ===============================
+// HANDLE ADD + UPDATE
+// ===============================
+function handleTask(){
+    const title =
+    taskInput.value.trim();
 
     if(title === ""){
 
-        showToast(
-            "Please enter a task"
-        );
+        showToast("⚠ Enter task title");
 
         return;
+
     }
-const newTask = {
 
-    id: Date.now(),
+    if(editTaskId !== null){
 
-    title:title,
+        updateTask();
 
-    completed:false,
+    }
 
+    else{
 
-    priority:
-    priorityInput.value,
+        addTask();
 
+    }
 
-    category:
-    categoryInput.value,
+}
 
+// ===============================
+// ADD TASK
+// ===============================
+function addTask(){
+    const newTask = {
 
-    dueDate:
-    dueDateInput.value,
+        id: Date.now(),
 
-    reminderTime:
-`${reminderHour.value}:${reminderMinute.value} ${reminderPeriod.value}`,
-reminderSent:false,
+        title:titleValue(),
 
-    date:
-    new Date().toLocaleString()
+        category: categoryInput.value,
 
-};
+        priority: priorityInput.value,
+
+        dueDate: dueDateInput.value,
+
+        completed:false,
+
+        date: new Date().toLocaleString()
+    };
 
     tasks.push(newTask);
 
-
-
     saveTasks();
-
-
 
     displayTasks();
 
-
-
     updateCounter();
-updateProgress();
 
+    updateProgress();
 
-    taskInput.value="";
+    clearForm();
 
-
+    closeTaskModal();
 
     showToast(
-        "Task Added Successfully"
+    "✅ Task Added Successfully"
     );
+}
+function titleValue(){
+
+    return taskInput.value.trim();
 
 }
-// ===============================
-// Save Tasks
-// ===============================
 
-
+// ===============================
+// SAVE TASKS
+// ===============================
 function saveTasks(){
 
     localStorage.setItem(
@@ -168,187 +135,306 @@ function saveTasks(){
     );
 
 }
-
 // ===============================
-// Display Tasks
+// DISPLAY TASKS
 // ===============================
 
 
 function displayTasks(){
-   taskList.innerHTML = `
-<div id="emptyMessage" class="empty-state">
-    <i class="fa-solid fa-clipboard-list"></i>
 
-    <h2>No Tasks Yet</h2>
 
-    <p>
-        Add your first task and start being productive.
-    </p>
-</div>
-`;
-if(tasks.length > 0){
+    taskList.innerHTML = "";
 
-    document.getElementById("emptyMessage").style.display="none";
 
-}
+
+    if(tasks.length === 0){
+
+
+        emptyMessage.style.display="block";
+
+
+        return;
+
+
+    }
+
+
+
+    emptyMessage.style.display="none";
+
+
+
     let filteredTasks = tasks;
 
 
 
-    if(currentFilter === "completed"){
+    // SEARCH FILTER
 
-
-        filteredTasks =
-        tasks.filter(
-        task=>task.completed
-        );
-
-
-    }
+    const searchValue =
+    searchInput.value.toLowerCase();
 
 
 
-    if(currentFilter === "pending"){
+    filteredTasks =
+    filteredTasks.filter(task =>
 
 
-        filteredTasks =
-        tasks.filter(
-        task=>!task.completed
-        );
-
-
-    }
-
-
-
-
-    if(searchInput){
-
-
-        const search =
-        searchInput.value.toLowerCase();
-
-
-
-        filteredTasks =
-        filteredTasks.filter(
-        task =>
         task.title
         .toLowerCase()
-        .includes(search)
+        .includes(searchValue)
+
+
+    );
+
+    // PRIORITY FILTER
+    if(priorityFilter.value !== "all"){
+
+
+        filteredTasks =
+        filteredTasks.filter(task =>
+
+
+            task.priority === priorityFilter.value
+
+
         );
 
 
     }
-    filteredTasks.forEach(
-    function(task){
+    // CATEGORY FILTER
 
 
-        const div =
-        document.createElement("div");
+if(categoryFilter.value !== "all"){
 
 
-
-        div.className =
-        "task-card";
-
+    filteredTasks =
+    filteredTasks.filter(task =>
 
 
-        if(task.completed){
+        task.category === categoryFilter.value
 
-            div.classList.add(
-                "completed"
-            );
 
-        }
-        // Show/Hide Empty Message
+    );
 
-if(emptyMessage){
-
-    if(tasks.length === 0){
-
-        emptyMessage.style.display = "block";
-
-    }
-    else{
-
-        emptyMessage.style.display = "none";
-
-    }
 
 }
 
-        div.innerHTML = `
+    filteredTasks.forEach(task => {
 
-        <h3>${task.title}</h3>
+        const card =
+        document.createElement("div");
 
-        <p>
-        Priority:
-        ${task.priority}
-        </p>
+        card.className =
+        `task-card ${task.priority}`;
+        if(task.completed){
+
+            card.classList.add("completed");
+
+        }
+        card.innerHTML = `
 
 
-        <p>
-        Category:
-        ${task.category}
-        </p>
+        <div class="task-header">
 
-        <p>
-        Due Date:
-        ${task.dueDate || "No Deadline"}
-        </p>
 
-        <p>
-Reminder:
-${task.reminderTime || "No Reminder"}
-</p>
+            <h3>
+
+            ${task.completed ? "✅" : ""}
+
+            ${task.title}
+            </h3>
+
+
+
+            <span class="priority ${task.priority}">
+
+
+                ${getPriorityIcon(task.priority)}
+
+                ${task.priority}
+
+
+            </span>
+
+
+        </div>
+        <div class="task-details">
+
+            <p>
+
+            ${getCategoryIcon(task.category)}
+
+            ${task.category}
+
+            </p>
+
+            <p class="due-date">
+
+
+            <i class="fa-solid fa-calendar"></i>
+
+            ${getDueDateText(task.dueDate)}
+
+            </p>
+
+        </div>
 
         <small>
+
+        Added:
         ${task.date}
+
         </small>
 
-
-        <div>
-
-
-        <button onclick="completeTask(${task.id})">
-        ✔
-        </button>
+        <div class="task-buttons">
 
 
-        <button onclick="editTask(${task.id})">
-        ✏️
-        </button>
+            <button onclick="completeTask(${task.id})">
 
 
-        <button onclick="deleteTask(${task.id})">
-        ❌
-        </button>
+                <i class="fa-solid fa-check"></i>
+
+
+            </button>
+
+            <button onclick="editTask(${task.id})">
+
+
+                <i class="fa-solid fa-pen"></i>
+
+
+            </button>
+            <button onclick="deleteTask(${task.id})">
+
+
+                <i class="fa-solid fa-trash"></i>
+
+
+            </button>
 
 
         </div>
 
+
         `;
-
-
-
-        taskList.appendChild(div);
-
-
-
+        taskList.appendChild(card);
     });
+}
+// ===============================
+// CATEGORY ICON
+// ===============================
+
+
+function getCategoryIcon(category){
+
+
+
+    switch(category){
+
+
+        case "Study":
+
+            return "📚";
+
+
+        case "Work":
+
+            return "💼";
+
+
+        case "Personal":
+
+            return "🏠";
+
+
+        case "Health":
+
+            return "🏋️";
+
+
+        case "Other":
+
+            return "📌";
+
+
+        default:
+
+            return "📁";
+
+
+    }
 
 
 }
+
 // ===============================
-// Complete Task
+// PRIORITY ICON
+// ===============================
+function getPriorityIcon(priority){
+    if(priority==="high"){
+
+
+        return "🔥";
+
+
+    }
+    if(priority==="medium"){
+
+
+        return "⚠️";
+
+
+    }
+
+    return "🌱";
+
+
+}
+
+// ===============================
+// DUE DATE DISPLAY
+// ===============================
+function getDueDateText(date){
+
+    if(!date){
+
+        return "No Deadline";
+
+    }
+
+    const today =
+    new Date();
+
+    const due =
+    new Date(date);
+
+    today.setHours(0,0,0,0);
+
+    due.setHours(0,0,0,0);
+    if(due < today){
+        return "🔴 Overdue";
+    }
+    if(
+    due.getTime()
+    ===
+    today.getTime()
+    ){
+        return "🟡 Due Today";
+    }
+
+    return "🟢 " + date;
+
+}
+// ===============================
+// COMPLETE TASK
 // ===============================
 
 
 function completeTask(id){
 
 
-    tasks = tasks.map(function(task){
+    tasks =
+    tasks.map(task=>{
 
 
         if(task.id === id){
@@ -359,157 +445,365 @@ function completeTask(id){
 
 
         }
+        return task;
 
+    });
+
+    saveTasks();
+
+    displayTasks();
+
+    updateCounter();
+
+    updateProgress();
+
+}
+
+// ===============================
+// DELETE TASK
+// ===============================
+function deleteTask(id){
+
+    const confirmDelete =
+    confirm("Delete this task?");
+
+    if(!confirmDelete){
+
+        return;
+
+    }
+
+    tasks =
+    tasks.filter(task=>task.id !== id);
+
+    saveTasks();
+
+    displayTasks();
+
+    updateCounter();
+
+    updateProgress();
+
+    showToast(
+    "🗑 Task Deleted"
+    );
+}
+
+
+// ===============================
+// EDIT TASK
+// ===============================
+function editTask(id){
+
+    const task =
+    tasks.find(
+        task=>task.id===id
+    );
+
+    if(!task){
+
+        return;
+
+    }
+
+    editTaskId =
+    id;
+
+    modalTitle.innerText =
+    "Edit Task";
+
+addTaskBtn.innerText =
+    "Update Task";
+
+    taskInput.value =
+    task.title;
+
+    categoryInput.value =
+    task.category;
+
+    priorityInput.value =
+    task.priority;
+
+    dueDateInput.value =
+    task.dueDate;
+
+    modalOverlay.classList.add(
+        "active"
+    );
+
+}
+
+// ===============================
+// UPDATE TASK
+// ===============================
+function updateTask(){
+
+    tasks =
+    tasks.map(task=>{
+
+        if(task.id === editTaskId){
+
+            task.title =
+            taskInput.value.trim();
+
+            task.category =
+            categoryInput.value;
+
+            task.priority =
+            priorityInput.value;
+
+            task.dueDate =
+            dueDateInput.value;
+        }
+        return task;
+    });
+    saveTasks();
+
+    displayTasks();
+
+    updateCounter();
+
+    updateProgress();
+
+    clearForm();
+
+    closeTaskModal();
+
+    showToast(
+    "✏️ Task Updated Successfully"
+    );
+
+    editTaskId=null;
+}
+
+// ===============================
+// CLEAR FORM
+// ===============================
+
+function clearForm(){
+    taskInput.value="";
+
+    categoryInput.value="Study";
+
+    priorityInput.value="high";
+
+    dueDateInput.value="";
+
+    modalTitle.innerText =
+        "Add Task";
+
+    addTaskBtn.innerText =
+    "Add Task";
+}
+
+// ===============================
+// CLOSE MODAL
+// ===============================
+
+
+function closeTaskModal(){
+
+
+    modalOverlay.classList.remove(
+        "active"  
+      );
+
+}// ===============================
+// COMPLETE TASK
+// ===============================
+function completeTask(id){
+
+    tasks =
+    tasks.map(task=>{
+
+        if(task.id === id){
+            task.completed =
+            !task.completed;
+
+        }
+        return task;
+    });
+
+    saveTasks();
+
+    displayTasks();
+
+    updateCounter();
+
+    updateProgress();
+
+}
+// ===============================
+// DELETE TASK
+// ===============================
+function deleteTask(id){
+
+    const confirmDelete =
+    confirm("Delete this task?");
+
+    if(!confirmDelete){
+
+        return;
+
+    }
+    tasks =
+    tasks.filter(task=>task.id !== id);
+
+    saveTasks();
+
+    displayTasks();
+
+    updateCounter();
+
+    updateProgress();
+
+    showToast(
+    "🗑 Task Deleted"
+    );
+
+}
+// ===============================
+// EDIT TASK
+// ===============================
+function editTask(id){
+
+    const task =
+    tasks.find(
+        task=>task.id===id
+    );
+
+    if(!task){
+
+        return;
+
+    }
+
+    editTaskId =
+    id;
+
+    modalTitle.innerText =
+    "Edit Task";
+
+    addTaskBtn.innerText =
+    "Update Task";
+
+    taskInput.value =
+    task.title;
+
+    categoryInput.value =
+    task.category;
+
+    priorityInput.value =
+    task.priority;
+
+    dueDateInput.value =
+    task.dueDate;
+
+    modalOverlay.classList.add(
+        "active"
+    );
+}
+
+// ===============================
+// UPDATE TASK
+// ===============================
+function updateTask(){
+
+    tasks =
+    tasks.map(task=>{
+
+
+        if(task.id === editTaskId){
+
+            task.title =
+            taskInput.value.trim();
+
+            task.category =
+            categoryInput.value;
+
+            task.priority =
+            priorityInput.value;
+
+            task.dueDate =
+            dueDateInput.value;
+
+        }
 
         return task;
 
 
     });
 
-
-
     saveTasks();
-
 
     displayTasks();
 
-
     updateCounter();
-        updateProgress();
 
+    updateProgress();
+
+    clearForm();
+
+    closeTaskModal();
 
     showToast(
-        "Task Updated"
+    "✏️ Task Updated Successfully"
+    );
+    editTaskId=null;
+
+}
+
+// ===============================
+// CLEAR FORM
+// ===============================
+
+
+function clearForm(){
+
+
+
+    taskInput.value="";
+
+    categoryInput.value="Study";
+
+    priorityInput.value="high";
+
+    dueDateInput.value="";
+
+
+
+    modalTitle.innerText =
+    "Add Task";
+
+
+
+    addTaskBtn.innerText =
+    "Add Task";
+
+
+
+}
+
+// ===============================
+// CLOSE MODAL
+// ===============================
+
+
+function closeTaskModal(){
+
+
+    modalOverlay.classList.remove(
+        "active"
     );
 
 
 }
-
-
-
-
-
-
 // ===============================
-// Delete Task
-// ===============================
-
-
-function deleteTask(id){
-
-
-
-    const confirmDelete =
-    confirm(
-        "Delete this task?"
-    );
-
-
-
-    if(confirmDelete){
-
-
-
-        tasks =
-        tasks.filter(
-        function(task){
-
-
-            return task.id !== id;
-
-
-        });
-
-
-
-        saveTasks();
-
-
-        displayTasks();
-
-
-        updateCounter();
-        updateProgress();
-
-
-
-        showToast(
-            "Task Deleted"
-        );
-
-    }
-
-
-}
-// ===============================
-// Edit Task
-// ===============================
-
-
-function editTask(id){
-
-
-
-    const task =
-    tasks.find(
-    function(task){
-
-
-        return task.id === id;
-
-
-    });
-
-
-
-    if(task){
-
-
-
-        const updated =
-        prompt(
-            "Edit Task",
-            task.title
-        );
-
-
-
-        if(updated !== null &&
-           updated.trim() !== ""){
-
-
-            task.title =
-            updated.trim();
-
-
-
-            saveTasks();
-
-
-            displayTasks();
-
-
-
-            showToast(
-                "Task Updated"
-            );
-
-
-        }
-
-
-    }
-
-
-}
-
-// ===============================
-// Task Counter
+// UPDATE COUNTERS
 // ===============================
 
 
 function updateCounter(){
-
 
 
     const total =
@@ -519,7 +813,7 @@ function updateCounter(){
 
     const completed =
     tasks.filter(
-    task=>task.completed
+        task=>task.completed
     ).length;
 
 
@@ -529,573 +823,390 @@ function updateCounter(){
 
 
 
-
-    if(totalTask){
-
-        totalTask.innerText =
-        total;
-
-    }
+    totalTask.innerText =
+    total;
 
 
 
-    if(completedTask){
-
-        completedTask.innerText =
-        completed;
-
-    }
+    completedTask.innerText =
+    completed;
 
 
 
-    if(pendingTask){
+    pendingTask.innerText =
+    pending;
 
-        pendingTask.innerText =
-        pending;
-
-    }
 
 
 }
+
 // ===============================
-// Search
-// ===============================
-if(searchInput){
-searchInput.addEventListener(
-"input",
-function(){
-    displayTasks();
-});
-}
-// ===============================
-// Filter Buttons
+// UPDATE PROGRESS
 // ===============================
 
 
-const filterButtons =
-document.querySelectorAll(
-".filter-btn"
-);
+function updateProgress(){
 
 
-
-filterButtons.forEach(
-function(button){
+    if(tasks.length===0){
 
 
-
-    button.addEventListener(
-    "click",
-    function(){
-
+        document.getElementById(
+            "progressText"
+        ).innerText="0%";
 
 
-        currentFilter =
-        button.dataset.filter;
+        document.getElementById(
+            "progressFill"
+        ).style.width="0%";
 
-
-
-        filterButtons.forEach(
-        btn=>btn.classList.remove(
-            "active"
-        ));
-
-
-
-        button.classList.add(
-            "active"
-        );
-
-
-
-        displayTasks();
-
-
-
-    });
-
-
-
-});
-// ===============================
-// Sorting
-// ===============================
-
-
-if(sortSelect){
-
-sortSelect.addEventListener(
-"change",
-function(){
-
-    let value =
-    sortSelect.value;
-
-    if(value==="newest"){
-
-        tasks.sort(
-        (a,b)=>
-        b.id-a.id
-        );
-
-    }
-
-    else if(value==="oldest"){
-
-        tasks.sort(
-        (a,b)=>
-        a.id-b.id
-        );
-
-    }
-
-    else if(value==="completed"){
-        tasks.sort(
-        (a,b)=>
-        b.completed-a.completed
-        );
-    }
-
-    saveTasks();
-    displayTasks();
-});
-}
-// ===============================
-// Toast Notification
-// ===============================
-function showToast(message){
-    if(!toast){
-
-        alert(message);
 
         return;
 
     }
+
+
+    const completed =
+    tasks.filter(
+        task=>task.completed
+    ).length;
+
+
+
+
+    const percentage =
+    Math.round(
+        (completed/tasks.length)*100
+    );
+
+
+
+
+    document.getElementById(
+        "progressText"
+    ).innerText =
+    percentage+"%";
+
+
+
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+    percentage+"%";
+// ===============================
+// CONGRATULATIONS QUOTE
+// ===============================
+
+
+const quotes = [
+
+"Success is the sum of small efforts repeated day after day.",
+
+"Great job! Every completed task brings you closer to your goals.",
+
+"Discipline is choosing what you want most over what you want now.",
+
+"Dream big. Work hard. Stay focused.",
+
+"Small progress is still progress."
+
+];
+
+
+
+const quoteBox =
+document.getElementById("quoteBox");
+
+
+const quoteText =
+document.getElementById("quoteText");
+
+
+
+if(
+completed === tasks.length &&
+tasks.length > 0
+){
+
+
+    quoteBox.style.display="block";
+
+
+    quoteText.innerText =
+    quotes[
+        Math.floor(
+            Math.random()*quotes.length
+        )
+    ];
+
+
+}
+else{
+
+
+    quoteBox.style.display="none";
+
+
+}
+
+}
+
+// ===============================
+// SEARCH
+// ===============================
+searchInput.addEventListener(
+"input",
+()=>{
+    displayTasks();
+});
+categoryFilter.addEventListener(
+"change",
+()=>{
+    displayTasks();
+});
+// ===============================
+// PRIORITY FILTER
+// ===============================
+
+
+priorityFilter.addEventListener(
+"change",
+()=>{
+
+
+    displayTasks();
+
+
+});
+
+// ===============================
+// TOAST
+// ===============================
+
+
+function showToast(message){
+
+
+
     toast.innerText =
     message;
+
+
+
     toast.classList.add(
         "show"
     );
-    setTimeout(
-    function(){
+
+
+
+    setTimeout(()=>{
+
+
         toast.classList.remove(
             "show"
         );
-    },3000);
-}
-function checkTaskReminder(){
-    const today =
-    new Date()
-    .toISOString()
-    .split("T")[0];
-    tasks.forEach(function(task){
-        if(
-            task.dueDate === today &&
-            !task.completed
-        ){
 
 
-            if(Notification.permission === "granted"){
-
-
-                new Notification(
-                    "Task Reminder 🔔",
-                    {
-
-                    body:
-                    task.title +
-                    " is due today!"
-
-                    }
-
-                );
-
-
-            }
-
-
-        }
-
-
-    });
-
+    },2500);
 
 }
+
+
 // ===============================
-// Enter Key Add Task
+// DARK MODE
 // ===============================
 
 
-if(taskInput){
+themeBtn.addEventListener(
+"click",
+()=>{
 
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+
+    const mode =
+    document.body.classList.contains(
+        "dark"
+    )
+    ?
+    "dark"
+    :
+    "light";
+
+
+
+    localStorage.setItem(
+        "theme",
+        mode
+    );
+
+
+
+});
+
+// LOAD THEME
+
+
+if(
+localStorage.getItem("theme")
+==="dark"
+){
+
+
+    document.body.classList.add(
+        "dark"
+    );
+
+
+}
+
+// ===============================
+// OPEN MODAL
+// ===============================
+
+
+openTaskModal.addEventListener(
+"click",
+()=>{
+
+
+    modalOverlay.classList.add(
+        "active"
+    );
+
+
+});
+
+// ===============================
+// CLOSE MODAL
+// ===============================
+
+
+closeModal.addEventListener(
+"click",
+()=>{
+
+
+    closeTaskModal();
+
+
+});
+
+modalOverlay.addEventListener(
+"click",
+(e)=>{
+
+
+    if(e.target===modalOverlay){
+
+
+        closeTaskModal();
+
+
+    }
+
+
+});
+
+// ===============================
+// ENTER KEY ADD TASK
+// ===============================
 
 
 taskInput.addEventListener(
 "keypress",
-function(event){
+(e)=>{
 
 
-
-    if(event.key === "Enter"){
-
+    if(e.key==="Enter"){
 
 
-        addTask();
+        handleTask();
 
 
     }
-
 
 
 });
-}
 
 // ===============================
-// Exact Time Reminder
-// ===============================
-function checkExactReminder(){
-    const now = new Date();
-    let hour =
-    now.getHours();
-    let minute =
-    now.getMinutes();
-    let period =
-    hour >= 12 ? "PM" : "AM";
-    hour =
-    hour % 12 || 12;
-    let currentTime =
-    `${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")} ${period}`;
-    const today =
-    now.toISOString()
-    .split("T")[0];
-    tasks.forEach(function(task){
-        if(
-    task.dueDate === today &&
-    task.reminderTime === currentTime &&
-    !task.completed &&
-    !task.reminderSent
-){
-            if(Notification.permission==="granted"){
-                new Notification(
-                    "Task Reminder 🔔",
-                
-                    {
-                        body:
-                        task.title +
-                        " reminder time reached!"
-                    }
-                );
-                task.reminderSent = true;
-                 saveTasks();
-
-            }
-
-
-        }
-
-
-    });
-
-
-}
-
-// ===============================
-// Clear All Tasks
+// GREETING
 // ===============================
 
 
-if(clearAllBtn){
+function updateGreeting(){
+
+
+    const greeting =
+    document.getElementById(
+        "greeting"
+    );
 
 
 
-clearAllBtn.addEventListener(
-"click",
-function(){
+    const hour =
+    new Date().getHours();
 
 
 
-    if(tasks.length===0){
+    if(hour>=5 && hour<12){
 
 
-        showToast(
-            "No tasks available"
-        );
-
-
-        return;
+        greeting.innerHTML =
+        "🌞 Good Morning";
 
 
     }
-    let result =
-    confirm(
-        "Delete all tasks?"
-    );
-    if(result){
-        tasks=[];
-        saveTasks();
-        displayTasks();
-        updateCounter();
-        updateProgress();
-        showToast(
-            "All Tasks Deleted"
-        );
+
+    else if(hour>=12 && hour<17){
+
+
+        greeting.innerHTML =
+        "☀️ Good Afternoon";
 
 
     }
-});
-}
-// ===============================
-// Export Tasks
-// ===============================
-if(exportBtn){
-exportBtn.addEventListener(
-"click",
-function(){
-    if(tasks.length===0){
-        showToast(
-            "No tasks to export"
-        );
-        return;
-    }
-    const file =
-    JSON.stringify(
-        tasks,
-        null,
-        2
-    );
-    const blob =
-    new Blob(
-        [file],
-        {
-            type:
-            "application/json"
-        }
-    );
-    const url =
-    URL.createObjectURL(
-        blob
-    );
-    const link =
-    document.createElement(
-        "a"
-    );
-    link.href=url;
-    link.download =
-    "tasks-backup.json";
-    link.click();
-    URL.revokeObjectURL(
-        url
-    );
-    showToast(
-        "Tasks Exported"
-    );
-});
 
-}
-// ===============================
-// Import Tasks
-// ===============================
-if(importInput){
-importInput.addEventListener(
-"change",
-function(event){
-    const file =
-    event.target.files[0];
-    if(!file){
-        return;
+    else if(hour>=17 && hour<21){
+
+
+        greeting.innerHTML =
+        "🌇 Good Evening";
+
 
     }
-    const reader =
-    new FileReader();
-    reader.onload =
-    function(e){
-        try{
+
+    else{
 
 
-            const imported =
-            JSON.parse(
-                e.target.result
-            );
-
-
-
-            if(Array.isArray(imported)){
-
-
-
-                tasks =
-                imported;
-
-
-
-                saveTasks();
-
-
-
-                displayTasks();
-
-
-
-                updateCounter();
-                updateProgress();
-
-
-
-                showToast(
-                    "Tasks Imported"
-                );
-
-
-
-            }
-
-
-
-        }
-
-        catch(error){
-
-
-
-            showToast(
-                "Invalid File"
-            );
-
-
-        }
-    };
-
-    reader.readAsText(file);
-
-});
-}
-// ===============================
-// Update Progress Bar
-// ===============================
-function updateProgress(){
-    if(tasks.length === 0){
-        if(progressText){
-
-            progressText.innerText = "0%";
-
-        }
-        if(progressFill){
-
-            progressFill.style.width = "0%";
-
-        }
-        return;
+        greeting.innerHTML =
+        "🌙 Good Night";
     }
-    const completed =
-    tasks.filter(
-        task => task.completed
-    ).length;
-    const percentage =
-    Math.round(
-        (completed / tasks.length) * 100
-    );
-    if(progressText){
-
-        progressText.innerText =
-        percentage + "%";
-
-    }
-    if(progressFill){
-
-        progressFill.style.width =
-        percentage + "%";
-
-    }
-}
-// ===============================
-// Dark / Light Theme
-// ===============================
-
-if(themeBtn){
-
-    themeBtn.addEventListener(
-        "click",
-        function(){
-
-            document.body.classList.toggle("dark");
-
-
-            let theme =
-            document.body.classList.contains("dark")
-            ?
-            "dark"
-            :
-            "light";
-
-
-            localStorage.setItem(
-                "theme",
-                theme
-            );
-
-
-        }
-    );
-
-}
-
-
-// Load Saved Theme
-
-const savedTheme =
-localStorage.getItem("theme");
-
-
-if(savedTheme === "dark"){
-
-    document.body.classList.add("dark");
 
 }
 // ===============================
-// Start Application
+// START APPLICATION
 // ===============================
+
+
+updateGreeting();
+
+
 displayTasks();
-displayTasks();
+
+
 updateCounter();
+
+
 updateProgress();
-requestNotificationPermission();
 
-checkTaskReminder();
-setInterval(
-    checkExactReminder,
-    60000
-);
-function requestNotificationPermission(){
-    if(
-        "Notification" in window
-    ){
-        Notification.requestPermission();
-    }
-}
+
+
 console.log(
-    "Task Planner Loaded Successfully"
+"✅ Task Planner Pro Loaded Successfully"
 );
-// ===============================
-// Register Service Worker
-// ===============================
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", () => {
-
-        navigator.serviceWorker
-            .register("service-worker.js")
-            .then(() => {
-
-                console.log("Service Worker Registered Successfully");
-
-            })
-            .catch((error) => {
-
-                console.log("Service Worker Registration Failed", error);
-
-            });
-
-    });
-
-}
