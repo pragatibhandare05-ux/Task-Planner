@@ -2,7 +2,7 @@
 // Task Planner Pro Service Worker
 // ===============================
 
-const CACHE_NAME = "task-planner-v1";
+const CACHE_NAME = "task-planner-v2";
 
 const FILES_TO_CACHE = [
     "./",
@@ -28,14 +28,36 @@ self.addEventListener("install", (event) => {
     );
 
 });
-
 // Activate Service Worker
 self.addEventListener("activate", (event) => {
 
     console.log("Service Worker Activated");
 
-});
+    event.waitUntil(
 
+        caches.keys().then((cacheNames) => {
+
+            return Promise.all(
+
+                cacheNames.map((cache) => {
+
+                    if (cache !== CACHE_NAME) {
+
+                        console.log("Deleting old cache:", cache);
+
+                        return caches.delete(cache);
+
+                    }
+
+                })
+
+            );
+
+        })
+
+    );
+
+});
 // Fetch Requests
 self.addEventListener("fetch", (event) => {
 
