@@ -1,3 +1,7 @@
+/* =========================================================
+   TASK PLANNER PRO V2
+   ========================================================= */
+
 /* ===========================
    RESET
 =========================== */
@@ -8,124 +12,149 @@
     box-sizing:border-box;
 }
 
-body{
-
-    font-family:'Poppins',sans-serif;
-
-    background:#eef2f7;
-
-    color:#222;
-
-    transition:.3s;
-
+html{
+    scroll-behavior:smooth;
 }
 
+body{
+    font-family:'Poppins',sans-serif;
+    background:#f4f7fc;
+    color:#222;
+    transition:.3s;
+    overflow-x:hidden;
+}
+
+body.dark{
+    background:#0f172a;
+    color:#fff;
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+    outline:none;
+}
+
+input,
+select{
+    outline:none;
+    border:none;
+}
 
 /* ===========================
-   APP CONTAINER
+   APP
 =========================== */
 
-
 .app{
-
-    max-width:450px;
-
-    min-height:100vh;
-
+    max-width:430px;
     margin:auto;
-
-    background:white;
-
-    display:flex;
-
-    flex-direction:column;
-
-    overflow:hidden;
-
-    position:relative;
-
-    transition:.3s;
-
+    min-height:100vh;
+    padding-bottom:90px;
 }
 
+/* ===========================
+   PAGES
+=========================== */
+
+.app-section{
+    display:none;
+    animation:fadeIn .35s ease;
+}
+
+.app-section.active{
+    display:block;
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+        transform:translateY(15px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
 
 /* ===========================
    HEADER
 =========================== */
 
-
 .header{
 
-    background:linear-gradient(
-        135deg,
-        #671b85,
-        #9c27b0
-    );
-
-    padding:35px 25px;
-
-    color:white;
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
+
+    padding:25px 20px 15px;
 
 }
 
-
 .welcome h2{
 
-    font-size:28px;
-
+    font-size:24px;
     font-weight:700;
 
 }
 
-
 .welcome p{
 
-    margin-top:8px;
-
-    opacity:.9;
+    color:#777;
+    margin-top:5px;
 
 }
 
+body.dark .welcome p{
 
+    color:#bbb;
+
+}
 
 #themeToggle{
 
-    width:50px;
-
-    height:50px;
-
-    border:none;
+    width:48px;
+    height:48px;
 
     border-radius:50%;
 
-    background:rgba(255,255,255,.2);
+    background:#6a1b9a;
 
     color:white;
 
-    font-size:20px;
+    font-size:18px;
 
-    cursor:pointer;
+    transition:.3s;
 
 }
 
+#themeToggle:hover{
+
+    transform:rotate(180deg);
+
+}
 
 /* ===========================
-SEARCH
+   SEARCH
 =========================== */
-
 
 .search{
 
-    padding:20px;
+    padding:0 20px 20px;
 
 }
-
 
 .search-box{
 
@@ -133,37 +162,45 @@ SEARCH
 
     align-items:center;
 
-    background:#f5f5f5;
+    gap:12px;
+
+    background:white;
 
     border-radius:15px;
 
-    padding:15px;
+    padding:15px 18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
+body.dark .search-box{
 
+    background:#1e293b;
+
+}
+
+.search-box i{
+
+    color:#6a1b9a;
+
+}
 
 .search-box input{
 
     flex:1;
 
-    border:none;
-
-    outline:none;
-
     background:transparent;
 
-    margin-left:10px;
+    color:inherit;
 
-    font-size:16px;
+    font-size:15px;
 
 }
 
-
 /* ===========================
-DASHBOARD CARDS
+   DASHBOARD
 =========================== */
-
 
 .dashboard{
 
@@ -173,30 +210,25 @@ DASHBOARD CARDS
 
     gap:15px;
 
-    padding:20px;
+    padding:0 20px 20px;
 
 }
-
-
 
 .card{
 
     background:white;
 
-    padding:20px;
-
     border-radius:18px;
 
     text-align:center;
 
-    box-shadow:
+    padding:20px 10px;
 
-    0 8px 20px rgba(0,0,0,.08);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 
     transition:.3s;
 
 }
-
 
 .card:hover{
 
@@ -204,184 +236,251 @@ DASHBOARD CARDS
 
 }
 
+body.dark .card{
 
-
-.card i{
-
-    color:#671b85;
-
-    font-size:28px;
-
-    margin-bottom:10px;
+    background:#1e293b;
 
 }
 
+.card i{
+
+    font-size:24px;
+
+    color:#6a1b9a;
+
+    margin-bottom:12px;
+
+}
 
 .card h3{
 
     font-size:28px;
 
-}
+    margin-bottom:6px;
 
+}
 
 .card p{
 
     color:#777;
 
+    font-size:14px;
+
 }
 
+body.dark .card p{
 
+    color:#bbb;
+
+}
 /* ===========================
-PROGRESS
+   STATISTICS
 =========================== */
 
+.statistics{
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    padding:0 20px 20px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+
+}
+
+body.dark .stat-card{
+
+    background:#1e293b;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.stat-card i{
+
+    color:#6a1b9a;
+    font-size:24px;
+    margin-bottom:10px;
+
+}
+
+.stat-card h3{
+
+    font-size:26px;
+    margin-bottom:5px;
+
+}
+
+.stat-card p{
+
+    color:#777;
+    font-size:14px;
+
+}
+
+body.dark .stat-card p{
+
+    color:#bbb;
+
+}
+
+/* ===========================
+   PROGRESS
+=========================== */
 
 .progress-section{
 
-    padding:20px;
+    padding:0 20px 20px;
 
 }
-
 
 .progress-title{
 
     display:flex;
-
     justify-content:space-between;
+    margin-bottom:12px;
+    font-weight:600;
+
+}
+
+.progress-bar{
+
+    width:100%;
+    height:12px;
+    background:#ddd;
+    border-radius:50px;
+    overflow:hidden;
+
+}
+
+body.dark .progress-bar{
+
+    background:#334155;
+
+}
+
+#progressFill{
+
+    width:0%;
+    height:100%;
+    border-radius:50px;
+    background:linear-gradient(90deg,#7b1fa2,#ba68c8);
+    transition:width .5s ease;
+
+}
+
+/* ===========================
+   QUOTE
+=========================== */
+
+.quote-box{
+
+    margin:0 20px 20px;
+    padding:18px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#7b1fa2,#ab47bc);
+    color:#fff;
+    display:none;
+
+}
+
+.quote-box h3{
 
     margin-bottom:10px;
 
 }
 
-
-
-.progress-bar{
-
-    height:12px;
-
-    background:#ddd;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-}
-
-
-
-#progressFill{
-
-    height:100%;
-
-    width:0;
-
-    background:#671b85;
-
-    transition:.5s;
-
-}
-
-
 /* ===========================
-TASK SECTION
+   TASK HEADER
 =========================== */
-
-
-.tasks{
-
-    padding:20px;
-
-    flex:1;
-
-}
-
-
 
 .task-top{
 
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
+    padding:20px;
+    gap:20px;
+    flex-wrap:wrap;
 
 }
 
+.task-top h2{
 
-
-#priorityFilter{
-
-    padding:10px 14px;
-
-    border-radius:10px;
-
-    border:1px solid #ddd;
+    font-size:24px;
 
 }
 
+/* ===========================
+   FILTERS
+=========================== */
 
+.filters{
+
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+
+}
+
+.filters select{
+
+    padding:10px 15px;
+    border-radius:12px;
+    background:#fff;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+body.dark .filters select{
+
+    background:#1e293b;
+    color:#fff;
+
+}
+
+/* ===========================
+   TASK LIST
+=========================== */
 
 .task-list{
 
-    margin-top:20px;
+    padding:0 20px 100px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
 
 }
-
-
-/* ===========================
-EMPTY STATE
-=========================== */
-
-
-.empty-state{
-
-    text-align:center;
-
-    margin-top:60px;
-
-    color:#999;
-
-}
-
-
-.empty-state i{
-
-    font-size:70px;
-
-    margin-bottom:20px;
-
-}
-
-
-
-/* ===========================
-TASK CARD
-=========================== */
-
 
 .task-card{
 
-    background:white;
-
-    padding:18px;
-
+    background:#fff;
     border-radius:18px;
-
-    margin-bottom:18px;
-
-    box-shadow:
-
-    0 8px 20px rgba(0,0,0,.08);
-
-    border-left:6px solid #ccc;
-
-    animation:cardAppear .4s ease;
-
+    padding:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
     transition:.3s;
+    border-left:6px solid #7b1fa2;
 
 }
 
+body.dark .task-card{
 
+    background:#1e293b;
+
+}
 
 .task-card:hover{
 
@@ -389,84 +488,57 @@ TASK CARD
 
 }
 
-
-
 .task-card.high{
 
-    border-left-color:#ef4444;
+    border-left-color:#e53935;
 
 }
-
 
 .task-card.medium{
 
-    border-left-color:#f59e0b;
+    border-left-color:#fb8c00;
 
 }
-
 
 .task-card.low{
 
-    border-left-color:#22c55e;
+    border-left-color:#43a047;
 
 }
 
+.task-card.completed{
 
+    opacity:.7;
+
+}
 
 .task-header{
 
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
+    gap:15px;
+    margin-bottom:15px;
 
 }
-
 
 .task-header h3{
 
+    flex:1;
     font-size:18px;
+    word-break:break-word;
 
 }
-
-
-
-.task-details{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-top:15px;
-
-    color:#666;
-
-    font-size:14px;
-
-}
-
-
-/* ===========================
-PRIORITY BADGE
-=========================== */
-
 
 .priority{
 
-    padding:8px 14px;
-
-    color:white;
-
-    border-radius:30px;
-
+    padding:6px 12px;
+    border-radius:20px;
     font-size:12px;
-
-    font-weight:700;
+    font-weight:600;
+    color:#fff;
 
 }
-
-
 
 .priority.high{
 
@@ -474,226 +546,349 @@ PRIORITY BADGE
 
 }
 
-
 .priority.medium{
 
-    background:#f9a825;
+    background:#fb8c00;
 
 }
-
 
 .priority.low{
 
     background:#43a047;
 
 }
-/* ===========================
-   TASK BUTTONS
-=========================== */
 
+.task-details{
+
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:15px;
+    color:#666;
+
+}
+
+body.dark .task-details{
+
+    color:#ccc;
+
+}
 
 .task-buttons{
 
     display:flex;
-
-    gap:12px;
-
+    justify-content:flex-end;
+    gap:10px;
     margin-top:15px;
 
 }
 
-
-
 .task-buttons button{
 
     width:42px;
-
     height:42px;
-
-    border:none;
-
-    border-radius:50%;
-
-    color:white;
-
-    cursor:pointer;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
+    border-radius:12px;
+    color:#fff;
     font-size:16px;
-
     transition:.3s;
 
 }
 
-
-
 .task-buttons button:nth-child(1){
 
-    background:#22c55e;
+    background:#43a047;
 
 }
-
 
 .task-buttons button:nth-child(2){
 
-    background:#3b82f6;
+    background:#1e88e5;
 
 }
-
 
 .task-buttons button:nth-child(3){
 
-    background:#ef4444;
+    background:#e53935;
 
 }
-
-
 
 .task-buttons button:hover{
 
-    transform:scale(1.1);
+    transform:scale(1.08);
 
 }
-
-
 
 /* ===========================
-   COMPLETED TASK
+   EMPTY STATE
 =========================== */
 
+.empty-state{
 
-.task-card.completed{
-
-    opacity:.75;
-
-    border-left-color:#22c55e;
-
-}
-
-
-
-.task-card.completed h3{
-
-    text-decoration:line-through;
-
-    color:#888;
+    display:none;
+    text-align:center;
+    padding:60px 20px;
 
 }
 
+.empty-state i{
 
-
-/* ===========================
-   DUE DATE
-=========================== */
-
-
-.due-date{
-
-    margin-top:10px;
-
-    font-weight:600;
+    font-size:70px;
+    color:#7b1fa2;
+    margin-bottom:20px;
 
 }
 
+.empty-state h3{
 
-
-.due-date.overdue{
-
-    color:#ef4444;
+    margin-bottom:10px;
 
 }
 
-
-
-.due-date.today{
-
-    color:#f59e0b;
-
-}
-
-
-
-.due-date.upcoming{
-
-    color:#22c55e;
-
-}
-
-
-
-.due-date.no-deadline{
+.empty-state p{
 
     color:#777;
 
 }
 
+body.dark .empty-state p{
 
+    color:#bbb;
+
+}
 /* ===========================
-   FLOAT BUTTON
+   PAGE TITLE
 =========================== */
 
+.page-title{
 
-.fab{
-
-    position:fixed;
-
-    bottom:25px;
-
-    right:25px;
-
-    width:65px;
-
-    height:65px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#671b85;
-
-    color:white;
-
-    font-size:25px;
-
-    cursor:pointer;
-
-    box-shadow:
-
-    0 10px 25px rgba(103,27,133,.35);
+    font-size:28px;
+    font-weight:700;
+    padding:25px 20px 15px;
 
 }
 
-
-
 /* ===========================
-   BOTTOM SHEET
+   CHARTS
 =========================== */
 
+.chart-card{
+
+    background:#fff;
+    margin:20px;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    min-height:320px;
+    transition:.3s;
+
+}
+
+body.dark .chart-card{
+
+    background:#1e293b;
+
+}
+
+.chart-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.chart-card canvas{
+
+    width:100% !important;
+    height:280px !important;
+
+}
+
+/* ===========================
+   SETTINGS
+=========================== */
+
+.settings-list{
+
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+}
+
+.setting-item{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#fff;
+    padding:18px 20px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+
+}
+
+body.dark .setting-item{
+
+    background:#1e293b;
+
+}
+
+.setting-item:hover{
+
+    transform:translateX(6px);
+
+}
+
+.setting-item i{
+
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#7b1fa2;
+    color:#fff;
+    font-size:18px;
+
+}
+
+.setting-item span{
+
+    flex:1;
+    margin-left:15px;
+    font-weight:500;
+
+}
+
+.logout{
+
+    color:#e53935;
+
+}
+
+.logout i{
+
+    background:#e53935;
+
+}
+.switch{
+
+    position:relative;
+
+    display:inline-block;
+
+    width:55px;
+
+    height:28px;
+
+}
+
+.switch input{
+
+    display:none;
+
+}
+
+.slider{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#ccc;
+
+    border-radius:30px;
+
+    transition:.3s;
+
+}
+
+.slider::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+
+    height:22px;
+
+    left:3px;
+
+    top:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+
+}
+
+.switch input:checked + .slider{
+
+    background:#7b1fa2;
+
+}
+
+.switch input:checked + .slider::before{
+
+    transform:translateX(27px);
+
+}
+/* ===========================
+   ADD TASK PAGE
+=========================== */
+
+.add-task-center{
+
+    min-height:70vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+
+}
+
+.add-task-center h2{
+
+    font-size:30px;
+    margin-bottom:12px;
+
+}
+
+.add-task-center p{
+
+    color:#777;
+
+}
+
+body.dark .add-task-center p{
+
+    color:#bbb;
+
+}
+
+/* ===========================
+   MODAL
+=========================== */
 
 .modal-overlay{
 
     position:fixed;
-
     inset:0;
-
     background:rgba(0,0,0,.45);
-
     display:none;
-
-    justify-content:flex-end;
-
     align-items:flex-end;
-
-    z-index:1000;
+    justify-content:center;
+    z-index:999;
 
 }
-
-
 
 .modal-overlay.active{
 
@@ -701,181 +896,22 @@ PRIORITY BADGE
 
 }
 
-
-
 .bottom-sheet{
 
     width:100%;
-
-    max-width:450px;
-
-    background:white;
-
-    padding:25px;
-
+    max-width:430px;
+    background:#fff;
     border-radius:25px 25px 0 0;
-
+    padding:25px;
     animation:slideUp .35s ease;
 
 }
 
+body.dark .bottom-sheet{
 
-
-.sheet-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:20px;
+    background:#1e293b;
 
 }
-
-
-
-.sheet-header button{
-
-    background:none;
-
-    border:none;
-
-    font-size:25px;
-
-    cursor:pointer;
-
-}
-
-
-
-.bottom-sheet input,
-.bottom-sheet select{
-
-    width:100%;
-
-    padding:14px;
-
-    margin-bottom:15px;
-
-    border-radius:12px;
-
-    border:1px solid #ddd;
-
-    font-size:16px;
-
-}
-
-
-
-#addTaskBtn{
-
-    width:100%;
-
-    padding:15px;
-
-    background:#671b85;
-
-    color:white;
-
-    border:none;
-
-    border-radius:15px;
-
-    font-size:17px;
-
-}
-
-
-
-/* ===========================
-   TOAST
-=========================== */
-
-
-.toast{
-
-    position:fixed;
-
-    top:25px;
-
-    left:50%;
-
-    transform:
-
-    translateX(-50%)
-
-    translateY(-100px);
-
-    background:#671b85;
-
-    color:white;
-
-    padding:15px 25px;
-
-    border-radius:12px;
-
-    opacity:0;
-
-    transition:.35s;
-
-    z-index:2000;
-
-}
-
-
-
-.toast.show{
-
-    transform:
-
-    translateX(-50%)
-
-    translateY(0);
-
-    opacity:1;
-
-}
-
-
-
-/* ===========================
-   QUOTE BOX
-=========================== */
-
-
-.quote-box{
-
-    display:none;
-
-    margin:20px;
-
-    padding:20px;
-
-    border-radius:18px;
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #671b85,
-        #9c27b0
-    );
-
-    color:white;
-
-    text-align:center;
-
-    animation:fadeIn .5s;
-
-}
-
-
-
-/* ===========================
-   ANIMATIONS
-=========================== */
-
 
 @keyframes slideUp{
 
@@ -893,720 +929,416 @@ PRIORITY BADGE
 
 }
 
-
-
-@keyframes cardAppear{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(25px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
-
-
-
-@keyframes fadeIn{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(20px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
-
-
-
-/* ===========================
-        DARK MODE
-=========================== */
-
-
-body.dark{
-
-    background:#121212;
-
-    color:white;
-
-}
-
-
-
-/* App */
-
-body.dark .app{
-
-    background:#1b1b1b;
-
-}
-
-
-
-/* Cards */
-
-body.dark .card{
-
-    background:#242424;
-
-    color:white;
-
-}
-
-
-
-body.dark .card p{
-
-    color:white;
-
-}
-
-
-
-/* Search */
-
-
-body.dark .search-box{
-
-    background:#2b2b2b;
-
-}
-
-
-
-body.dark .search-box input{
-
-    color:white;
-
-}
-
-
-
-body.dark input::placeholder{
-
-    color:white;
-
-}
-
-
-
-/* Task Cards */
-
-
-body.dark .task-card{
-
-    background:#2b2b2b;
-
-    color:white;
-
-}
-
-
-
-/* Details */
-
-
-body.dark .task-details{
-
-    color:white;
-
-}
-
-
-
-/* Progress */
-
-
-body.dark .progress-bar{
-
-    background:#444;
-
-}
-
-
-
-/* Dropdown */
-
-
-body.dark select{
-
-    background:#2b2b2b;
-
-    color:white;
-
-}
-
-
-
-/* Modal */
-
-
-body.dark .bottom-sheet{
-
-    background:#222;
-
-    color:white;
-
-}
-
-
-
-body.dark .bottom-sheet input,
-body.dark .bottom-sheet select{
-
-    background:#333;
-
-    color:white;
-
-    border-color:#555;
-
-}
-
-
-
-/* Empty */
-
-
-body.dark .empty-state{
-
-    color:white;
-
-}
-
-
-
-/* All Text Fix */
-
-
-body.dark h1,
-body.dark h2,
-body.dark h3,
-body.dark h4,
-body.dark p,
-body.dark span,
-body.dark label,
-body.dark small{
-
-    color:white;
-
-}
-
-
-
-/* ===========================
-RESPONSIVE
-=========================== */
-
-
-@media(max-width:450px){
-
-
-.dashboard{
-
-    grid-template-columns:repeat(3,1fr);
-
-}
-
-
-
-.header{
-
-    padding:25px 20px;
-
-}
-
-
-
-.welcome h2{
-
-    font-size:24px;
-
-}
-
-
-}
-/* ===========================
-   LIGHT MODE TEXT COLOR FIX
-=========================== */
-
-/* Default light mode */
-body:not(.dark),
-body:not(.dark) .app {
-
-    color:#000;
-
-}
-
-
-/* All text elements in light mode */
-
-body:not(.dark) h1,
-body:not(.dark) h2,
-body:not(.dark) h3,
-body:not(.dark) h4,
-body:not(.dark) p,
-body:not(.dark) span,
-body:not(.dark) label,
-body:not(.dark) small {
-
-    color:#000;
-
-}
-
-
-/* Search text */
-
-body:not(.dark) input {
-
-    color:#000;
-
-}
-
-
-body:not(.dark) input::placeholder{
-
-    color:#000;
-
-}
-
-
-
-/* Dropdown */
-
-body:not(.dark) select{
-
-    color:#000;
-
-    background:white;
-
-}
-
-
-
-/* Task details */
-
-body:not(.dark) .task-details{
-
-    color:#000;
-
-}
-
-
-
-/* Empty state */
-
-body:not(.dark) .empty-state{
-
-    color:#000;
-
-}
-
-
-
-/* Progress text */
-
-body:not(.dark) .progress-title,
-body:not(.dark) .progress-percent{
-
-    color:#000;
-
-}
-.task-details{
+.sheet-header{
 
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
-    margin-top:15px;
-
-}
-
-
-
-.task-details p{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    font-size:14px;
+    margin-bottom:20px;
 
 }
 
+.sheet-header button{
 
-
-.task-details i{
-
-    color:#671b85;
-
-}
-
-
-
-body.dark .task-details i{
-
-    color:white;
-
-}
-/* ===========================
-   FINAL DARK MODE FIX
-=========================== */
-
-
-body.dark{
-
-    background:#121212;
-
-    color:white;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#eee;
+    font-size:18px;
 
 }
 
+body.dark .sheet-header button{
 
-
-/* Main App */
-
-body.dark .app{
-
-    background:#1b1b1b;
+    background:#334155;
+    color:#fff;
 
 }
 
+.bottom-sheet input,
+.bottom-sheet select{
 
-
-/* Header */
-
-body.dark .header{
-
-    color:white;
-
-}
-
-
-
-/* Cards */
-
-body.dark .card{
-
-    background:#242424;
-
-    color:white;
+    width:100%;
+    padding:14px 16px;
+    margin-bottom:15px;
+    border-radius:12px;
+    background:#f5f5f5;
+    font-size:15px;
 
 }
-
-
-body.dark .card p{
-
-    color:white;
-
-}
-
-
-
-
-/* Search */
-
-body.dark .search-box{
-
-    background:#2b2b2b;
-
-}
-
-
-body.dark .search-box input{
-
-    color:white;
-
-}
-
-
-body.dark .search-box input::placeholder{
-
-    color:white;
-
-}
-
-
-
-
-/* Tasks */
-
-body.dark .task-card{
-
-    background:#2b2b2b;
-
-    color:white;
-
-}
-
-
-
-body.dark .task-details,
-
-body.dark .task-details p,
-
-body.dark small{
-
-    color:white;
-
-}
-
-
-
-/* Empty */
-
-body.dark .empty-state{
-
-    color:white;
-
-}
-
-
-
-/* Progress */
-
-body.dark .progress-title{
-
-    color:white;
-
-}
-
-
-
-/* Modal */
-
-body.dark .bottom-sheet{
-
-    background:#222;
-
-    color:white;
-
-}
-
-
 
 body.dark .bottom-sheet input,
 body.dark .bottom-sheet select{
 
-    background:#333;
-
-    color:white;
-
-    border-color:#555;
+    background:#334155;
+    color:#fff;
 
 }
 
+#addTaskBtn{
 
-
-/* Filter */
-
-body.dark #priorityFilter{
-
-    background:#333;
-
-    color:white;
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+    background:#7b1fa2;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
 
 }
-/* ==========================
+
+/* ===========================
+   TOAST
+=========================== */
+
+.toast{
+
+    position:fixed;
+    left:50%;
+    bottom:105px;
+    transform:translateX(-50%) translateY(120px);
+    background:#7b1fa2;
+    color:#fff;
+    padding:14px 22px;
+    border-radius:12px;
+    z-index:1000;
+    transition:.35s;
+    opacity:0;
+
+}
+
+.toast.show{
+
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+
+}
+
+/* ===========================
    BOTTOM NAVIGATION
-========================== */
-
+=========================== */
 
 .bottom-nav{
 
     position:fixed;
-
     bottom:0;
-
     left:50%;
-
     transform:translateX(-50%);
-
     width:100%;
-
-    max-width:450px;
-
+    max-width:430px;
     height:75px;
-
-    background:white;
-
+    background:#fff;
     display:flex;
-
     justify-content:space-around;
-
     align-items:center;
-
-    box-shadow:0 -5px 20px rgba(0,0,0,.1);
-
-    z-index:900;
+    box-shadow:0 -8px 25px rgba(0,0,0,.08);
+    z-index:999;
 
 }
-
-
-
-.nav-item{
-
-    border:none;
-
-    background:none;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    gap:5px;
-
-    font-size:12px;
-
-    color:#777;
-
-    cursor:pointer;
-
-}
-
-
-
-.nav-item i{
-
-    font-size:22px;
-
-}
-
-
-
-.nav-item.active{
-
-    color:#671b85;
-
-}
-
-
-
-
-.add-nav{
-
-    width:60px;
-
-    height:60px;
-
-    border-radius:50%;
-
-    background:#671b85;
-
-    color:white;
-
-    margin-top:-35px;
-
-    box-shadow:
-    0 10px 25px rgba(103,27,133,.35);
-
-}
-
-
-
-
-.add-nav i{
-
-    font-size:25px;
-
-}
-
-
-
-
-/* DARK MODE */
-
 
 body.dark .bottom-nav{
 
-    background:#1f1f1f;
+    background:#1e293b;
 
 }
 
+.nav-item{
 
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    background:none;
+    color:#888;
+    font-size:13px;
 
-body.dark .nav-item{
+}
 
-    color:white;
+.nav-item i{
+
+    font-size:20px;
 
 }
 
+.nav-item.active{
 
-
-body.dark .nav-item.active{
-
-    color:#c77dff;
+    color:#7b1fa2;
 
 }
-/* Bottom navigation space */
 
-.tasks{
+.add-btn{
 
-    padding-bottom:100px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#7b1fa2;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    margin-top:-35px;
+    box-shadow:0 10px 25px rgba(123,31,162,.4);
 
 }
-/* ==========================
-   FILTER SECTION
-========================== */
 
+/* ===========================
+   RESPONSIVE
+=========================== */
 
-.filters{
+@media(max-width:768px){
+
+    .dashboard{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .statistics{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .task-header{
+
+        flex-direction:column;
+        align-items:flex-start;
+
+    }
+
+    .task-details{
+
+        flex-direction:column;
+
+    }
+
+}
+.tasks-header{
+
+    padding:20px;
+
+}
+
+.task-status{
 
     display:flex;
 
     gap:10px;
 
-}
+    margin-top:15px;
 
-
-
-.filters select{
-
-
-    padding:10px;
-
-    border-radius:12px;
-
-    border:1px solid #ddd;
-
-    font-size:13px;
+    flex-wrap:wrap;
 
 }
 
+.status-btn{
 
+    padding:10px 18px;
 
-body.dark .filters select{
+    border-radius:25px;
 
-    background:#333;
+    background:#ececec;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+body.dark .status-btn{
+
+    background:#334155;
 
     color:white;
 
-    border-color:#555;
+}
+
+.status-btn.active{
+
+    background:#7b1fa2;
+
+    color:white;
+
+}
+.task-status{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    display:inline-block;
+}
+
+
+.Overdue{
+
+    background-color:#ffdddd;
+    color:#d00000;
+
+}
+/* =========================
+   LOGIN PAGE DESIGN
+========================= */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(
+        135deg,
+        #cec8d0,
+        #9b59b6
+    );
+}
+
+
+.login-box {
+
+    width: 350px;
+    padding: 35px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+    text-align: center;
+
+}
+
+
+.login-box h1 {
+
+    color: #3a0ddc;
+    margin-bottom: 10px;
+
+}
+
+
+.login-box h2 {
+
+    margin-bottom: 25px;
+    color: #333;
+
+}
+
+
+.input-group {
+
+    text-align: left;
+    margin-bottom: 20px;
+
+}
+
+
+.input-group label {
+
+    display: block;
+    margin-bottom: 8px;
+
+    font-weight: 600;
+
+}
+
+
+.input-group input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    border: 1px solid #ccc;
+
+    outline: none;
+
+    font-size: 15px;
+
+}
+
+
+.input-group input:focus {
+
+    border-color: #c50e17;
+
+}
+
+
+.login-box button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #0f1de1;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.login-box button:hover {
+
+    opacity: 0.9;
+
+}
+
+
+.login-box p {
+
+    margin-top: 20px;
+
+}
+
+
+.login-box a {
+
+    color: #f30c0c;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+}
+.password-box {
+
+    position: relative;
+
+}
+
+
+.password-box input {
+
+    padding-right: 45px;
+
+}
+
+
+.password-box span {
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+
+    font-size: 18px;
 
 }

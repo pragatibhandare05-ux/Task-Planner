@@ -28,214 +28,361 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
-
 <body>
 
 <div class="app">
 
-    <!-- ================= HEADER ================= -->
+    <!-- ===========================
+            HOME PAGE
+    ============================ -->
 
-    <header class="header">
+    <section id="home" class="app-section active">
 
-        <div class="welcome">
+        <!-- HEADER -->
 
-            <h2 id="greeting">👋 Welcome</h2>
+        <header class="header">
 
-            <p>Stay productive today</p>
+            <div class="welcome">
+
+                <h2 id="greeting">👋 Welcome</h2>
+
+                <p>Stay productive today</p>
+
+            </div>
+
+            <button id="themeToggle">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+        </header>
+
+        <!-- SEARCH -->
+
+        <section class="search">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-search"></i>
+
+                <input
+                    type="text"
+                    id="searchTask"
+                    placeholder="Search your tasks...">
+
+            </div>
+
+        </section>
+
+        <!-- DASHBOARD -->
+
+        <section class="dashboard">
+
+            <div class="card">
+
+                <i class="fa-solid fa-list-check"></i>
+
+                <h3 id="totalTasks">0</h3>
+
+                <p>Total Tasks</p>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <h3 id="completedTasks">0</h3>
+
+                <p>Completed</p>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <h3 id="pendingTasks">0</h3>
+
+                <p>Pending</p>
+
+            </div>
+
+        </section>
+
+        <!-- TASK STATISTICS -->
+
+        <section class="statistics">
+
+            <div class="stat-card">
+
+                <i class="fa-solid fa-calendar-day"></i>
+
+                <h3 id="todayTasks">0</h3>
+
+                <p>Today's Tasks</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <h3 id="overdueTasks">0</h3>
+
+                <p>Overdue</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <h3 id="dueTodayTasks">0</h3>
+
+                <p>Due Today</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <i class="fa-solid fa-trophy"></i>
+
+                <h3 id="completedToday">0</h3>
+
+                <p>Completed</p>
+
+            </div>
+
+        </section>
+
+        <!-- PROGRESS -->
+
+        <section class="progress-section">
+
+            <div class="progress-title">
+
+                <span>Today's Progress</span>
+
+                <span id="progressText">0%</span>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div id="progressFill"></div>
+
+            </div>
+
+        </section>
+
+        <!-- QUOTE -->
+
+        <div id="quoteBox" class="quote-box">
+
+            <h3>🎉 Congratulations!</h3>
+
+            <p id="quoteText"></p>
 
         </div>
 
-        <button id="themeToggle">
+    </section>
 
+    <!-- ===========================
+            TASK PAGE
+    ============================ -->
+<section id="tasks" class="app-section">
+
+    <div class="task-top">
+
+        <div>
+
+            <h2>All Tasks</h2>
+
+            <p>Manage all your tasks</p>
+
+        </div>
+
+        <div class="task-status">
+
+            <button class="status-btn active" data-status="all">
+                All
+            </button>
+
+            <button class="status-btn" data-status="pending">
+                Pending
+            </button>
+
+            <button class="status-btn" data-status="completed">
+                Completed
+            </button>
+
+            <button class="status-btn" data-status="high">
+                High Priority
+            </button>
+
+        </div>
+
+        <div class="filters">
+
+            <select id="priorityFilter">
+
+                <option value="all">🔥 All Priority</option>
+                <option value="high">🔥 High</option>
+                <option value="medium">⚠️ Medium</option>
+                <option value="low">🌱 Low</option>
+
+            </select>
+
+            <select id="categoryFilter">
+
+                <option value="all">📂 All Categories</option>
+                <option value="Study">📚 Study</option>
+                <option value="Work">💼 Work</option>
+                <option value="Personal">🏠 Personal</option>
+                <option value="Health">🏋️ Health</option>
+                <option value="Other">📌 Other</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="task-list" id="taskList"></div>
+
+    <div id="emptyMessage" class="empty-state">
+
+        <i class="fa-solid fa-clipboard-list"></i>
+
+        <h3>No Tasks Yet</h3>
+
+        <p>Add your first task.</p>
+
+    </div>
+
+</section>
+    <!-- ===========================
+            ADD TASK
+    ============================ -->
+
+    <section id="addTask" class="app-section">
+
+        <div class="add-task-center">
+
+            <h2>Create New Task</h2>
+
+            <p>Tap the + button below to add a task.</p>
+
+        </div>
+
+    </section>
+
+    <!-- ===========================
+            STATISTICS
+    ============================ -->
+
+    <section id="stats" class="app-section">
+
+        <h2 class="page-title">Statistics</h2>
+
+        <div class="chart-card">
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <canvas id="barChart"></canvas>
+
+        </div>
+
+    </section>
+     <!-- ===========================
+            SETTINGS
+    ============================ -->
+    <section id="settings" class="app-section">
+
+    <h2 class="page-title">Settings</h2>
+
+    <div class="settings-list">
+
+        <div class="setting-item">
             <i class="fa-solid fa-moon"></i>
+            <span>Dark Mode</span>
 
-        </button>
+            <label class="switch">
+                <input type="checkbox" id="darkModeSwitch">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-    </header>
+        <div class="setting-item">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
 
-    <!-- ================= SEARCH ================= -->
+            <label class="switch">
+                <input type="checkbox" id="notificationSwitch">
+                <span class="slider"></span>
+            </label>
+        </div>
 
-    <section class="search">
+        <div class="setting-item">
+            <i class="fa-solid fa-volume-high"></i>
+            <span>Sound</span>
 
-        <div class="search-box">
+            <label class="switch">
+                <input type="checkbox" id="soundSwitch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
 
-            <i class="fa-solid fa-search"></i>
+        <div class="setting-item" id="exportTasks">
 
-            <input
-                type="text"
-                id="searchTask"
-                placeholder="Search your tasks...">
+            <i class="fa-solid fa-download"></i>
+
+            <span>Export Tasks</span>
 
         </div>
 
-    </section>
+        <div class="setting-item" id="importTasks">
 
-    <!-- ================= DASHBOARD ================= -->
+            <i class="fa-solid fa-upload"></i>
 
-    <section class="dashboard">
-
-        <div class="card">
-
-            <i class="fa-solid fa-list-check"></i>
-
-            <h3 id="totalTasks">0</h3>
-
-            <p>Total Tasks</p>
+            <span>Import Tasks</span>
 
         </div>
 
-        <div class="card">
+        <div class="setting-item" id="clearTasks">
 
-            <i class="fa-solid fa-circle-check"></i>
+            <i class="fa-solid fa-trash"></i>
 
-            <h3 id="completedTasks">0</h3>
-
-            <p>Completed</p>
+            <span>Clear All Tasks</span>
 
         </div>
 
-        <div class="card">
+        <div class="setting-item logout" id="logoutBtn">
 
-            <i class="fa-solid fa-clock"></i>
+            <i class="fa-solid fa-right-from-bracket"></i>
 
-            <h3 id="pendingTasks">0</h3>
-
-            <p>Pending</p>
+            <span>Logout</span>
 
         </div>
-
-    </section>
-
-    <!-- ================= PROGRESS ================= -->
-
-    <section class="progress-section">
-
-        <div class="progress-title">
-
-            <span>Today's Progress</span>
-
-            <span id="progressText">0%</span>
-
-        </div>
-
-        <div class="progress-bar">
-
-            <div id="progressFill"></div>
-
-        </div>
-
-    </section>
-
-    <!-- Quote -->
-
-    <div id="quoteBox" class="quote-box">
-
-        <h3>🎉 Congratulations!</h3>
-
-        <p id="quoteText"></p>
-
-    </div>
-<div class="task-top">
-
-
-    <h2>Your Tasks</h2>
-
-
-    <div class="filters">
-
-
-        <!-- Priority Filter -->
-
-        <select id="priorityFilter">
-
-            <option value="all">
-                🔥 All Priority
-            </option>
-
-            <option value="high">
-                🔥 High
-            </option>
-
-            <option value="medium">
-                ⚠️ Medium
-            </option>
-
-            <option value="low">
-                🌱 Low
-            </option>
-
-        </select>
-
-
-
-        <!-- Category Filter -->
-
-        <select id="categoryFilter">
-
-
-            <option value="all">
-                📂 All Categories
-            </option>
-
-
-            <option value="Study">
-                📚 Study
-            </option>
-
-
-            <option value="Work">
-                💼 Work
-            </option>
-
-
-            <option value="Personal">
-                🏠 Personal
-            </option>
-
-
-            <option value="Health">
-                🏋️ Health
-            </option>
-
-
-            <option value="Other">
-                📌 Other
-            </option>
-
-
-        </select>
-
 
     </div>
 
-
-</div>
-        <!-- Task List -->
-
-        <div class="task-list" id="taskList"></div>
-
-        <!-- Empty Message -->
-
-        <div id="emptyMessage" class="empty-state">
-
-            <i class="fa-solid fa-clipboard-list"></i>
-
-            <h3>No Tasks Yet</h3>
-
-            <p>Add your first task.</p>
-
-        </div>
-
-    </section>
-<!-- ==========================
-     BOTTOM NAVIGATION
-========================== -->
-
+</section>
+<!-- ===========================
+        BOTTOM NAVIGATION
+=========================== -->
 
 <nav class="bottom-nav">
 
-
-    <button class="nav-item active">
+    <button
+        class="nav-item active"
+        onclick="showSection('home')">
 
         <i class="fa-solid fa-house"></i>
 
@@ -243,9 +390,9 @@
 
     </button>
 
-
-
-    <button class="nav-item">
+    <button
+        class="nav-item"
+        onclick="showSection('tasks')">
 
         <i class="fa-solid fa-list-check"></i>
 
@@ -253,42 +400,35 @@
 
     </button>
 
-    <button class="nav-item add-nav"
-id="openTaskModal">
-        <i class="fa-solid fa-plus"></i>
+    <button
+        class="add-btn"
+        onclick="openModal()">
 
+        <i class="fa-solid fa-plus"></i>
 
     </button>
 
+    <button
+        class="nav-item"
+        onclick="showSection('stats')">
 
-
-
-    <button class="nav-item">
-
-
-        <i class="fa-solid fa-chart-line"></i>
+        <i class="fa-solid fa-chart-pie"></i>
 
         <span>Stats</span>
 
-
     </button>
 
-
-
-
-    <button class="nav-item">
-
+    <button
+        class="nav-item"
+        onclick="showSection('settings')">
 
         <i class="fa-solid fa-gear"></i>
 
         <span>Settings</span>
 
-
     </button>
 
-
 </nav>
-</div>
 <!-- ===========================
      ADD / EDIT TASK MODAL
 =========================== -->
@@ -380,8 +520,11 @@ id="openTaskModal">
 <!-- ================= TOAST ================= -->
 
 <div id="toast" class="toast"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>
+<script>
+document.getElementById("home").classList.add("active");
+</script>
 
 </body>
 
