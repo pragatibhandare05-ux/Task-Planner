@@ -1608,34 +1608,35 @@ function checkReminderNotifications() {
 
     tasks.forEach(task => {
 
-    if(
-        task.reminderTime &&
-        !task.completed &&
-        !task.reminderSent
-    ){
+        if (
+            task.reminderTime &&
+            !task.completed &&
+            !task.reminderSent
+        ) {
 
-        const reminderDate = new Date(task.reminderTime);
+            const reminderDate = new Date(task.reminderTime);
 
-        if(now >= reminderDate){
+            if (now >= reminderDate) {
 
-            self.registration.showNotification(
-                "🔔 Task Reminder",
-                {
-                    body: task.title,
-                    icon: "./images/icon-192.png",
-                    badge: "./images/icon-192.png",
-                    vibrate: [300,100,300]
-                }
-            );
+                self.registration.showNotification(
+                    "🔔 Task Reminder",
+                    {
+                        body: task.title,
+                        icon: "./images/icon-192.png",
+                        badge: "./images/icon-192.png",
+                        vibrate: [300,100,300]
+                    }
+                );
 
-            task.reminderSent = true;
+                task.reminderSent = true;
+
+            }
 
         }
 
-    }
+    });
 
-
-});
+}
 
 // ===============================
 // Reminder Engine
