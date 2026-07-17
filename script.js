@@ -1762,3 +1762,6 @@ function convertTo24Hour(hour, minute, period) {
     return `${hour.toString().padStart(2, "0")}:${minute}`;
 
 }    setInterval(reminderEngine, 1000);
+window.showSection = showSection;
+window.openModal = openModal;
+window.closeTaskModal = closeTaskModal;
