@@ -64,7 +64,8 @@ const closeModal = document.getElementById("closeModal");
 const taskInput = document.getElementById("taskTitle");
 const categoryInput = document.getElementById("taskCategory");
 const priorityInput = document.getElementById("taskPriority");
-const dueDateInput = document.getElementById("taskDate");
+const reminderDateInput = document.getElementById("reminderDate");
+const reminderTimeInput = document.getElementById("reminderTime");
 const addTaskBtn = document.getElementById("addTaskBtn");
 
 // Toast
@@ -73,7 +74,13 @@ const toast = document.getElementById("toast");
 // Navigation
 const sections = document.querySelectorAll(".app-section");
 const navItems = document.querySelectorAll(".nav-item");
+//reminder
+const reminderHour = document.getElementById("reminderHour");
+const reminderMinute = document.getElementById("reminderMinute");
+const reminderPeriod = document.getElementById("reminderPeriod");
+const reminderDate = document.getElementById("reminderDate");
 
+const dueDateInput = document.getElementById("taskDate");
 // ===============================
 // GLOBAL VARIABLES
 // ===============================
@@ -115,6 +122,31 @@ let currentSort = "latest";
 
 let pieChart = null;
 let barChart = null;
+// ===============================
+// Notification Permission
+// ===============================
+
+async function requestNotificationPermission() {
+
+    if (!("Notification" in window)) {
+        alert("This browser does not support notifications.");
+        return;
+    }
+
+    if (Notification.permission === "default") {
+
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+            console.log("Notification permission granted.");
+        }
+        else {
+            console.log("Notification permission denied.");
+        }
+
+    }
+
+}
 // ===============================
 // CONSTANTS
 // ===============================
@@ -199,14 +231,22 @@ function resetForm() {
     categoryInput.value = "Study";
 
     priorityInput.value = "high";
-
     dueDateInput.value = "";
-
+    reminderDateInput.value = "";
+    reminderTimeInput.value = "";
+    
     modalTitle.innerText = "Add Task";
 
     addTaskBtn.innerText = "Add Task";
 
     editTaskId = null;
+    reminderDate.value = "";
+
+reminderHour.value = "12";
+
+reminderMinute.value = "00";
+
+reminderPeriod.value = "AM";
 
 }
 // ===============================
@@ -258,7 +298,6 @@ function handleTask() {
 // ===============================
 // CREATE TASK OBJECT
 // ===============================
-
 function createTaskObject() {
 
     return {
@@ -273,10 +312,19 @@ function createTaskObject() {
 
         dueDate: dueDateInput.value,
 
+        reminderDate: reminderDateInput.value,
+
+        reminderTime: convertTo24Hour(
+            reminderHour.value,
+            reminderMinute.value,
+            reminderPeriod.value
+        ),
+        status: "Pending",
+        notificationSent: false,
         completed: false,
 
         date: new Date().toLocaleString()
-
+        
     };
 
 }
@@ -326,6 +374,8 @@ function editTask(id) {
     priorityInput.value = task.priority;
 
     dueDateInput.value = task.dueDate;
+    reminderDateInput.value = task.reminderDate || "";
+reminderTimeInput.value = task.reminderTime || "";
 
     openModal();
 
@@ -348,6 +398,8 @@ function updateTask() {
     task.priority = priorityInput.value;
 
     task.dueDate = dueDateInput.value;
+    task.reminderDate = reminderDateInput.value;
+task.reminderTime = reminderTimeInput.value;
 
     saveTasks();
 
@@ -390,8 +442,9 @@ function completeTask(id) {
     const task = tasks.find(task => task.id === id);
 
     if (!task) return;
-
     task.completed = !task.completed;
+
+    task.status = task.completed ? "Completed" : "Pending";
 
     saveTasks();
 
@@ -432,8 +485,8 @@ function refreshApp() {
 function displayTasks() {
 
     taskList.innerHTML = "";
-
     let filteredTasks = [...tasks];
+   
 // ===============================
 // STATUS FILTER
 // ===============================
@@ -658,6 +711,11 @@ ${getDueDateText(task.dueDate)}
 </p>
 
 </div>
+<p class="reminder-time">
+
+🔔 ${getReminderText(task)}
+
+</p>
 
 <small>
 
@@ -788,6 +846,38 @@ function getDueDateText(date) {
     }
 
     return "🟢 " + date;
+
+}
+function getReminderText(task) {
+
+    if (!task.reminderDate || !task.reminderTime) {
+
+        return "No Reminder";
+
+    }
+
+    return `${task.reminderDate} at ${formatTime12Hour(task.reminderTime)}`;
+
+}
+function formatTime12Hour(time) {
+
+    if (!time) return "";
+
+    let [hours, minutes] = time.split(":");
+
+    hours = parseInt(hours);
+
+    const period = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+
+    if (hours === 0) {
+
+        hours = 12;
+
+    }
+
+    return `${hours}:${minutes} ${period}`;
 
 }
 // ===============================
@@ -1256,12 +1346,14 @@ function initializeApp() {
     checkTaskReminders();
 
     showSection("home");
+    setInterval(checkReminderNotifications, 30000);
 
     console.log("✅ Task Planner Pro V2 Loaded");
 
 }
 
 initializeApp();
+requestNotificationPermission();
 // ===============================
 // SETTINGS
 // ===============================
@@ -1377,6 +1469,62 @@ function requestNotificationPermission() {
 
 }
 requestNotificationPermission();
+console.log("requestNotificationPermission() called");
+console.log("Current Permission:", Notification.permission);
+// ===============================
+// Show Notification
+// ===============================
+
+function showTaskNotification(task) {
+
+    if (Notification.permission !== "granted") return;
+
+    new Notification("🔔 Task Reminder", {
+
+        body: task.title + "\nTime to complete your task!",
+
+        icon: "images/icon-192.png",
+
+        badge: "images/icon-192.png"
+
+    });
+
+}
+// ===============================
+// Check Reminder Notifications
+// ===============================
+
+function checkReminderNotifications() {
+
+    const now = new Date();
+
+    tasks.forEach(task => {
+
+        if (
+            !task.reminderDate ||
+            !task.reminderTime ||
+            task.notificationSent
+        ) {
+            return;
+        }
+
+        const reminderDateTime = new Date(
+            `${task.reminderDate}T${task.reminderTime}`
+        );
+
+        if (now >= reminderDateTime) {
+
+            showTaskNotification(task);
+
+            task.notificationSent = true;
+
+        }
+
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+}
 // ===============================
 // TASK REMINDERS
 // ===============================
@@ -1385,33 +1533,46 @@ function checkTaskReminders() {
 
     if (Notification.permission !== "granted") return;
 
-    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+
+    const currentDate =
+        now.toISOString().split("T")[0];
+
+    const currentTime =
+        now.getHours().toString().padStart(2, "0") +
+        ":" +
+        now.getMinutes().toString().padStart(2, "0");
 
     tasks.forEach(task => {
 
         if (
-            task.dueDate === today &&
-            !task.completed
+            task.reminderDate === currentDate &&
+            task.reminderTime === currentTime &&
+            !task.notified
         ) {
 
             new Notification("📌 Task Reminder", {
 
                 body: task.title,
 
-                icon: "icons/icon-192.png"
+                icon: "images/icon-192.png"
 
             });
+
+            task.notified = true;
 
         }
 
     });
+
+    saveTasks();
 
 }
 setInterval(() => {
 
     checkTaskReminders();
 
-}, 3600000);
+},1000);
 // ===============================
 // SERVICE WORKER REGISTRATION
 // ===============================
@@ -1434,5 +1595,20 @@ if ("serviceWorker" in navigator) {
             });
 
     });
+
+}
+function convertTo24Hour(hour, minute, period) {
+
+    hour = parseInt(hour);
+
+    if (period === "PM" && hour !== 12) {
+        hour += 12;
+    }
+
+    if (period === "AM" && hour === 12) {
+        hour = 0;
+    }
+
+    return `${hour.toString().padStart(2, "0")}:${minute}`;
 
 }

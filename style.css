@@ -1342,3 +1342,14 @@ body.dark .status-btn{
     font-size: 18px;
 
 }
+.reminder-time{
+
+    color:#ff9800;
+
+    font-size:14px;
+
+    margin-top:6px;
+
+    font-weight:500;
+
+}
