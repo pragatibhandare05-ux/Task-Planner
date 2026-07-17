@@ -71,6 +71,8 @@ const addTaskBtn = document.getElementById("addTaskBtn");
 // Toast
 const toast = document.getElementById("toast");
 
+// Reminder Sound
+const reminderSound = new Audio("sounds/reminder.mp3");
 // Navigation
 const sections = document.querySelectorAll(".app-section");
 const navItems = document.querySelectorAll(".nav-item");
@@ -122,6 +124,93 @@ let currentSort = "latest";
 
 let pieChart = null;
 let barChart = null;
+// ===============================
+// IndexedDB Setup
+// ===============================
+
+let db;
+
+const request = indexedDB.open(
+    "TaskPlannerDB",
+    1
+);
+
+
+request.onupgradeneeded = function(event){
+
+    db = event.target.result;
+
+
+    if(!db.objectStoreNames.contains("tasks")){
+
+        db.createObjectStore(
+            "tasks",
+            {
+                keyPath: "id"
+            }
+        );
+
+    }
+
+};
+
+
+request.onsuccess = function(event){
+
+    db = event.target.result;
+
+    console.log(
+        "IndexedDB Connected"
+    );
+
+};
+
+
+request.onerror = function(){
+
+    console.log(
+        "IndexedDB Error"
+    );
+
+};
+// ===============================
+// Save Task to IndexedDB
+// ===============================
+
+function saveTaskToDB(task){
+
+    const transaction = db.transaction(
+        ["tasks"],
+        "readwrite"
+    );
+
+
+    const store = transaction.objectStore(
+        "tasks"
+    );
+
+
+    store.put(task);
+
+
+    transaction.oncomplete = function(){
+
+        console.log(
+            "Task saved in IndexedDB"
+        );
+
+    };
+
+
+    transaction.onerror = function(){
+
+        console.log(
+            "Failed to save task"
+        );
+
+    };
+
+}
 // ===============================
 // Notification Permission
 // ===============================
@@ -1474,20 +1563,39 @@ console.log("Current Permission:", Notification.permission);
 // ===============================
 // Show Notification
 // ===============================
+function showTaskNotification(task){
 
-function showTaskNotification(task) {
+    const notification = new Notification(
+        "🔔 Task Reminder",
+        {
+            body: task.title + "\nTime to complete your task!",
 
-    if (Notification.permission !== "granted") return;
+            icon: "images/icon-192.png",
 
-    new Notification("🔔 Task Reminder", {
+            badge: "images/icon-192.png"
+        }
+    );
 
-        body: task.title + "\nTime to complete your task!",
 
-        icon: "images/icon-192.png",
+    notification.onclick = function(){
 
-        badge: "images/icon-192.png"
+        window.focus();
 
-    });
+    };
+
+
+    if ("vibrate" in navigator){
+
+        navigator.vibrate([300,100,300]);
+
+    }
+
+
+    const reminderSound = new Audio(
+        "sounds/reminder.mp3"
+    );
+
+    reminderSound.play();
 
 }
 // ===============================
@@ -1500,29 +1608,71 @@ function checkReminderNotifications() {
 
     tasks.forEach(task => {
 
-        if (
-            !task.reminderDate ||
-            !task.reminderTime ||
-            task.notificationSent
-        ) {
-            return;
+    if(
+        task.reminderTime &&
+        !task.completed &&
+        !task.reminderSent
+    ){
+
+        const reminderDate = new Date(task.reminderTime);
+
+        if(now >= reminderDate){
+
+            self.registration.showNotification(
+                "🔔 Task Reminder",
+                {
+                    body: task.title,
+                    icon: "./images/icon-192.png",
+                    badge: "./images/icon-192.png",
+                    vibrate: [300,100,300]
+                }
+            );
+
+            task.reminderSent = true;
+
         }
 
-        const reminderDateTime = new Date(
-            `${task.reminderDate}T${task.reminderTime}`
-        );
+    }
 
-        if (now >= reminderDateTime) {
+
+});
+
+// ===============================
+// Reminder Engine
+// ===============================
+
+function reminderEngine() {
+
+    const now = new Date();
+
+    const currentDate =
+        now.toISOString().split("T")[0];
+
+    const currentTime =
+        now.toTimeString().slice(0, 5);
+
+    tasks.forEach(task => {
+
+        if (
+            task.notificationSent ||
+            !task.reminderDate ||
+            !task.reminderTime
+        ) return;
+
+        if (
+            task.reminderDate === currentDate &&
+            task.reminderTime === currentTime
+        ) {
 
             showTaskNotification(task);
 
             task.notificationSent = true;
 
+            saveTasks();
+
         }
 
     });
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
 
 }
 // ===============================
@@ -1611,4 +1761,4 @@ function convertTo24Hour(hour, minute, period) {
 
     return `${hour.toString().padStart(2, "0")}:${minute}`;
 
-}
+}    setInterval(reminderEngine, 1000);
